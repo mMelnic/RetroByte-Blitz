@@ -75,4 +75,7 @@ dependencies {
 
     // To use Kotlin annotation processing tool (kapt)
     kapt("androidx.room:room-compiler:$room_version")
+
+    implementation ("org.mindrot:jbcrypt:0.4")
+    implementation ("androidx.security:security-crypto:1.1.0-alpha03")
 }
