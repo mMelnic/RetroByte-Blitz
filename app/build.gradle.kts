@@ -82,4 +82,11 @@ dependencies {
 
     implementation ("org.mindrot:jbcrypt:0.4")
     implementation ("androidx.security:security-crypto:1.1.0-alpha03")
+    implementation("androidx.room:room-ktx:$room_version")
+}
+
+kapt {
+    arguments {
+        arg("room.schemaLocation", "$projectDir/schemas")
+    }
 }
