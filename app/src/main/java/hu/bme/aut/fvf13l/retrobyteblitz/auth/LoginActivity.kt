@@ -1,8 +1,10 @@
 package hu.bme.aut.fvf13l.retrobyteblitz.auth
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import hu.bme.aut.fvf13l.retrobyteblitz.MainActivity
@@ -18,6 +20,13 @@ class LoginActivity : AppCompatActivity() {
         AuthViewModelFactory(userDao)
     }
     private lateinit var binding: ActivityLoginBinding
+    private val registerActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "Registration was canceled", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,13 +45,17 @@ class LoginActivity : AppCompatActivity() {
                         startActivity(Intent(this, MainActivity::class.java))
                         finish()
                     } else {
-                        // Show error message if login fails
                         Toast.makeText(this, "Invalid credentials", Toast.LENGTH_SHORT).show()
                     }
                 }
             } else {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        binding.registerButton.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            registerActivityResultLauncher.launch(intent)  // Use the launcher instead of just startActivity()
         }
     }
 
