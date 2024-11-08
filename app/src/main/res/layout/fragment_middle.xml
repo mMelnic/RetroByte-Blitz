@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="3"
+    android:columnCount="2"
+    android:padding="16dp"
+    android:rowCount="3">
+
+    <Button
+        android:id="@+id/buttonDailyActivities"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_columnSpan="2"
+        android:layout_gravity="fill"
+        android:text="Daily Activities" />
+
+    <Button
+        android:id="@+id/buttonLogic"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Logic" />
+
+    <Button
+        android:id="@+id/buttonMemory"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Memory" />
+
+    <Button
+        android:id="@+id/buttonCalculation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Calculation" />
+
+    <Button
+        android:id="@+id/buttonKnowledge"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_columnSpan="2"
+        android:layout_gravity="fill"
+        android:text="Knowledge" />
+</GridLayout>

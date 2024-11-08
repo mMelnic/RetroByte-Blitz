@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="3"
+    android:columnCount="2"
+    android:padding="16dp"
+    android:rowCount="2">
+
+    <Button
+        android:id="@+id/buttonGame1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Game 1" />
+
+    <Button
+        android:id="@+id/buttonGame2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Game 2" />
+
+    <Button
+        android:id="@+id/buttonGame3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Game 3" />
+
+    <Button
+        android:id="@+id/buttonGame4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Game 4" />
+</GridLayout>
