@@ -1,47 +1,36 @@
 package hu.bme.aut.fvf13l.retrobyteblitz
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import hu.bme.aut.fvf13l.retrobyteblitz.ui.theme.RetroByteBlitzTheme
+import androidx.appcompat.app.AppCompatActivity
+import hu.bme.aut.fvf13l.retrobyteblitz.databinding.ActivityMainBinding
+import hu.bme.aut.fvf13l.retrobyteblitz.fragments.menus.BottomFragment
+import hu.bme.aut.fvf13l.retrobyteblitz.fragments.menus.MiddleFragment
+import hu.bme.aut.fvf13l.retrobyteblitz.fragments.menus.TopCategoryFragment
+import hu.bme.aut.fvf13l.retrobyteblitz.fragments.menus.MiddleGamesFragment
+import hu.bme.aut.fvf13l.retrobyteblitz.fragments.menus.TopFragment
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            RetroByteBlitzTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
-        }
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.topFragmentContainer, TopFragment())
+            .replace(R.id.middleFragmentContainer, MiddleFragment())
+            .replace(R.id.bottomFragmentContainer, BottomFragment())
+            .commit()
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    RetroByteBlitzTheme {
-        Greeting("Android")
+    // Method to open the category view
+    fun openCategory(category: String) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.topFragmentContainer, TopCategoryFragment.newInstance(category))
+            .replace(R.id.middleFragmentContainer, MiddleGamesFragment())
+            .addToBackStack(null)
+            .commit()
     }
 }
