@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "749592153755",
+    "project_id": "retrobyte-blitz",
+    "storage_bucket": "retrobyte-blitz.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:749592153755:android:e8728788fed6c08911803e",
+        "android_client_info": {
+          "package_name": "hu.bme.aut.fvf13l.retrobyteblitz"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXLc50mnin3t5kewDf8Uks0OYYpz_TOaY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
