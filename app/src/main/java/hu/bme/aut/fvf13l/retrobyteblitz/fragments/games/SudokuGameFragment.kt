@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.GridLayout
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
@@ -33,6 +34,14 @@ class SudokuGameFragment : Fragment() {
         "hard" to 600000L     // 10 minutes for hard
     )
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // Register the callback in the fragment but delegate the handling to the activity
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            (activity as? MainActivity)?.handleBackPressed()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
