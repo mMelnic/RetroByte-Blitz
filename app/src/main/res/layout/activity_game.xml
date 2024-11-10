@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <!-- Top Fragment Container (2/6 of screen) -->
+    <FrameLayout
+        android:id="@+id/topGameFragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:background="@android:color/transparent"/>
+
+    <!-- Middle Fragment Container (3/6 of screen) -->
+    <FrameLayout
+        android:id="@+id/middleGameFragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:background="@android:color/transparent"/>
+
+    <!-- Bottom Fragment Container (1/6 of screen) -->
+    <FrameLayout
+        android:id="@+id/bottomGameFragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"/>
+</LinearLayout>
