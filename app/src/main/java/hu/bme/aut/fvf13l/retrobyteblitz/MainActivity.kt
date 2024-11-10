@@ -3,6 +3,7 @@ package hu.bme.aut.fvf13l.retrobyteblitz
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import hu.bme.aut.fvf13l.retrobyteblitz.databinding.ActivityMainBinding
+import hu.bme.aut.fvf13l.retrobyteblitz.fragments.games.CountdownTimerFragment
 import hu.bme.aut.fvf13l.retrobyteblitz.fragments.menus.BottomFragment
 import hu.bme.aut.fvf13l.retrobyteblitz.fragments.menus.MiddleFragment
 import hu.bme.aut.fvf13l.retrobyteblitz.fragments.menus.TopCategoryFragment
@@ -29,8 +30,16 @@ class MainActivity : AppCompatActivity() {
     fun openCategory(category: String) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.topFragmentContainer, TopCategoryFragment.newInstance(category))
-            .replace(R.id.middleFragmentContainer, MiddleGamesFragment())
-            .addToBackStack(null)
+            .replace(R.id.middleFragmentContainer, MiddleGamesFragment.newInstance(category))
+            .addToBackStack("GAME_AND_TIMER_STACK")
             .commit()
     }
+
+    fun startTimer(timeLimit: Long) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.bottomFragmentContainer, CountdownTimerFragment.newInstance(timeLimit))
+            .addToBackStack("GAME_AND_TIMER_STACK")
+            .commit()
+    }
+
 }
