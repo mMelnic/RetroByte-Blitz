@@ -6,9 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
-import hu.bme.aut.fvf13l.retrobyteblitz.MainActivity
 import hu.bme.aut.fvf13l.retrobyteblitz.R
 
 class CountdownTimerFragment : Fragment() {
@@ -28,15 +26,6 @@ class CountdownTimerFragment : Fragment() {
             }
             fragment.arguments = args
             return fragment
-        }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        // Register the callback in the fragment but delegate the handling to the activity
-        requireActivity().onBackPressedDispatcher.addCallback(this) {
-            (activity as? MainActivity)?.handleBackPressed()
         }
     }
 
@@ -61,13 +50,12 @@ class CountdownTimerFragment : Fragment() {
     }
 
     private fun startCountdown() {
-        timer?.cancel()  // Cancel any previous timers
+        timer?.cancel()
 
         timer = object : CountDownTimer(totalTime, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val progress = ((millisUntilFinished.toFloat() / totalTime) * 100).toInt()
 
-                // Update the progress bar and time text
                 progressBar.progress = progress
                 val minutes = (millisUntilFinished / 60000).toString().padStart(2, '0')
                 val seconds = ((millisUntilFinished % 60000) / 1000).toString().padStart(2, '0')
@@ -75,7 +63,7 @@ class CountdownTimerFragment : Fragment() {
             }
 
             override fun onFinish() {
-                // Handle the end of the countdown (e.g., notify game logic)
+                // ToDo pop-up screen at the end of the game
                 timerTextView.text = "Time's up!"
             }
         }.start()
@@ -83,6 +71,6 @@ class CountdownTimerFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        timer?.cancel()  // Cancel the timer if the view is destroyed
+        timer?.cancel()
     }
 }
