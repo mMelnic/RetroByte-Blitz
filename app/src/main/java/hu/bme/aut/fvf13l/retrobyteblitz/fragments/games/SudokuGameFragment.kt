@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.GridLayout
 import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
@@ -22,17 +23,17 @@ import hu.bme.aut.fvf13l.retrobyteblitz.databinding.FragmentSudokuGameBinding
 import kotlinx.coroutines.launch
 
 
-class SudokuGameFragment : Fragment() {
+class SudokuGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
 
     private var _binding: FragmentSudokuGameBinding? = null
     private val binding get() = _binding!!
     private lateinit var solutionGrid: List<List<Int>>
     private lateinit var currentGrid: Array<Array<EditText>>
-    private val difficultyTimeLimits = mapOf(
-        "easy" to 300000L,    // 5 minutes for easy
-        "medium" to 450000L,  // 7.5 minutes for medium
-        "hard" to 600000L     // 10 minutes for hard
-    )
+//    private val difficultyTimeLimits = mapOf(
+//        "easy" to 300000L,    // 5 minutes for easy
+//        "medium" to 450000L,  // 7.5 minutes for medium
+//        "hard" to 600000L     // 10 minutes for hard
+//    )
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,8 +73,7 @@ class SudokuGameFragment : Fragment() {
 
                         displaySudokuGrid(grid.value, grid.solution)
                         val difficulty = grid.difficulty.lowercase() // "easy", "medium", "hard"
-                        val timeLimit = difficultyTimeLimits[difficulty] ?: 300000L
-                        (activity as MainActivity).startTimer(timeLimit)
+                        //val timeLimit = difficultyTimeLimits[difficulty] ?: 300000L
                         addTextWatchers()
 
                     } else {
@@ -161,6 +161,18 @@ class SudokuGameFragment : Fragment() {
             }
         }
         return true
+    }
+
+    private fun displayFinalScore() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Game Over")
+            .setMessage("Time is up!")
+            .setPositiveButton("OK") { _, _ -> activity?.finish() }
+            .show()
+    }
+
+    override fun onTimerEnd() {
+        displayFinalScore()
     }
 
     override fun onDestroyView() {

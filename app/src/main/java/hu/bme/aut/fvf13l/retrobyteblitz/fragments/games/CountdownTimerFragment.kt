@@ -1,4 +1,5 @@
 package hu.bme.aut.fvf13l.retrobyteblitz.fragments.games
+import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.LayoutInflater
@@ -15,6 +16,21 @@ class CountdownTimerFragment : Fragment() {
     private lateinit var timerTextView: TextView
     private var timer: CountDownTimer? = null
     private var totalTime: Long = 0
+
+    interface TimerEndListener {
+        fun onTimerEnd()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is TimerEndListener) {
+            timerEndListener = context
+        } else {
+            throw RuntimeException("$context must implement TimerEndListener")
+        }
+    }
+
+    private var timerEndListener: TimerEndListener? = null
 
     companion object {
         private const val ARG_TIME_LIMIT = "time_limit"
@@ -65,6 +81,7 @@ class CountdownTimerFragment : Fragment() {
             override fun onFinish() {
                 // ToDo pop-up screen at the end of the game
                 timerTextView.text = "Time's up!"
+                timerEndListener?.onTimerEnd()
             }
         }.start()
     }
