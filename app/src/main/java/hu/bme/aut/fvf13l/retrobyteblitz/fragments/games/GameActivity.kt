@@ -32,6 +32,9 @@ class GameActivity : AppCompatActivity(), CountdownTimerFragment.TimerEndListene
         val gameFragment = when (gameName) {
             "Sudoku" -> SudokuGameFragment()
             "Calculation" -> CalculationGameFragment()
+            "MemoryGame" -> MemoryGameFragment()
+            "Drag" -> MemoryDragGameFragment()
+            "Grid" -> GridMemoryGameFragment()
             // Add other cases for additional games as needed
             else -> null
         }

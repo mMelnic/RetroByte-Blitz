@@ -20,7 +20,7 @@ class MiddleGamesFragment : Fragment() {
     private val categoryGames = mapOf(
         "Daily Exercises" to listOf("Game 1A", "Game 2A", "Game 3A", "Game 4A"),
         "Logic" to listOf("Game 1B", "Sudoku", "Game 3B", "Game 4B"),
-        "Memory" to listOf("Game 1C", "Game 2C", "Game 3C", "Game 4C"),
+        "Memory" to listOf("MemoryGame", "Drag", "Grid", "Game 4C"),
         "Calculation" to listOf("Calculation", "Game 2D", "Game 3D", "Game 4D"),
         "Knowledge" to listOf("Game 1E", "Game 2E", "Game 3E", "Game 4E")
     )
@@ -95,6 +95,27 @@ class MiddleGamesFragment : Fragment() {
                 val intent = Intent(requireContext(), GameActivity::class.java).apply {
                     putExtra("GAME_NAME", "Calculation")
                     putExtra("TIME_LIMIT", 120000L)
+                }
+                startActivity(intent)
+            }
+            "MemoryGame" -> {
+                val intent = Intent(requireContext(), GameActivity::class.java).apply {
+                    putExtra("GAME_NAME", "MemoryGame")
+                    putExtra("TIME_LIMIT", 60000L)
+                }
+                startActivity(intent)
+            }
+            "Drag" -> {
+                val intent = Intent(requireContext(), GameActivity::class.java).apply {
+                    putExtra("GAME_NAME", "Drag")
+                    putExtra("TIME_LIMIT", 60000L)
+                }
+                startActivity(intent)
+            }
+            "Grid" -> {
+                val intent = Intent(requireContext(), GameActivity::class.java).apply {
+                    putExtra("GAME_NAME", "Grid")
+                    putExtra("TIME_LIMIT", 60000L)
                 }
                 startActivity(intent)
             }
