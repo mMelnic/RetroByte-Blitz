@@ -1,58 +1,77 @@
 package hu.bme.aut.fvf13l.retrobyteblitz.fragments.games
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import hu.bme.aut.fvf13l.retrobyteblitz.R
+import hu.bme.aut.fvf13l.retrobyteblitz.databinding.FragmentCalculationGameBinding
 
 class CalculationGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
 
-    private lateinit var equationTextView: TextView
-    private lateinit var answerEditText: EditText
-    private lateinit var submitButton: Button
+    private lateinit var binding: FragmentCalculationGameBinding
     private var correctAnswersCount = 0
+    private var totalRounds = 0
     private var currentDifficulty = 1
-    private val maxAdditionBound = when {
-        currentDifficulty <= 5 -> 10 // Levels 1-5: Prefer numbers <= 10
-        currentDifficulty <= 8 -> 30 // Levels 6-8: Increase to <= 30
-        currentDifficulty <= 12 -> 70 // Levels 9-12: Increase to <= 70
-        else -> 100 // Level 13 and beyond: Up to <= 100
-    }
+    private var userInput = ""
+    private val handler = Handler(Looper.getMainLooper())
 
-    private val maxMultiplicationBound = when {
-        currentDifficulty <= 4 -> 5 // Levels 1-4: Prefer numbers <= 5
-        currentDifficulty <= 7 -> 8 // Levels 5-7: Increase to <= 8
-        currentDifficulty <= 11 -> 12 // Levels 8-11: Increase to <= 12
-        else -> 15 // Level 12 and beyond: Up to <= 15
-    }
+    private val maxAdditionBound: Int
+        get() = when {
+            currentDifficulty <= 5 -> 10
+            currentDifficulty <= 8 -> 30
+            currentDifficulty <= 12 -> 70
+            else -> 100
+        }
+
+    private val maxMultiplicationBound: Int
+        get() = when {
+            currentDifficulty <= 4 -> 5
+            currentDifficulty <= 7 -> 8
+            currentDifficulty <= 11 -> 12
+            else -> 15
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val rootView = inflater.inflate(R.layout.fragment_calculation_game, container, false)
-        equationTextView = rootView.findViewById(R.id.equationTextView)
-        answerEditText = rootView.findViewById(R.id.answerEditText)
-        submitButton = rootView.findViewById(R.id.submitButton)
+    ): View {
+        binding = FragmentCalculationGameBinding.inflate(inflater, container, false)
 
-        submitButton.setOnClickListener {
-            checkAnswer()
+        val buttons = listOf(
+            binding.button0,
+            binding.button1,
+            binding.button2,
+            binding.button3,
+            binding.button4,
+            binding.button5,
+            binding.button6,
+            binding.button7,
+            binding.button8,
+            binding.button9
+        )
+
+        // Set click listeners for all buttons
+        buttons.forEach { button ->
+            button.setOnClickListener { onNumberSelected(button.text.toString()) }
         }
 
+        // Generate the first equation
         generateNewEquation()
-        return rootView
+
+        return binding.root
     }
 
     private fun generateNewEquation() {
         val equation = generateEquation()
-        equationTextView.text = equation.first
-        equationTextView.tag = equation.second
+        // Set the equation text with " = ?"
+        binding.equationTextView.text = "${equation.first} = ?"
+        binding.equationTextView.tag = equation.second
+        userInput = "" // Reset user input
+        totalRounds++
     }
 
     private fun generateEquation(): Pair<String, Int> {
@@ -96,10 +115,13 @@ class CalculationGameFragment : Fragment(), CountdownTimerFragment.TimerEndListe
                     result -= thirdOperand
                 }
                 '*' -> {
-                    if (operation1 == '-') {
-                        thirdOperand = (1..(result / 2).coerceAtLeast(1)).random()
-                    } else {
-                        thirdOperand = (1..maxMultiplicationBound).random()
+                    thirdOperand = when (operation1) {
+                        '-' -> {
+                            // Ensure firstOperand >= secondOperand * thirdOperand
+                            val maxThirdOperand = (firstOperand / secondOperand).coerceAtLeast(1)
+                            (1..maxThirdOperand).random()
+                        }
+                        else -> (1..maxMultiplicationBound).random()
                     }
                     result *= thirdOperand
                 }
@@ -114,22 +136,34 @@ class CalculationGameFragment : Fragment(), CountdownTimerFragment.TimerEndListe
         return Pair(equation, result)
     }
 
-    private fun checkAnswer() {
-        val userAnswer = answerEditText.text.toString().toIntOrNull()
-        val correctAnswer = equationTextView.tag as? Int
+    private fun onNumberSelected(digit: String) {
+        userInput += digit
+        displayEquationWithInput()
+        val correctAnswer = binding.equationTextView.tag as? Int
+        val correctAnswerString = correctAnswer?.toString()
 
-        if (userAnswer != null && correctAnswer != null && userAnswer == correctAnswer) {
-            correctAnswersCount++
-            currentDifficulty++
-            answerEditText.text.clear()
-            generateNewEquation()
-        } else {
-            answerEditText.text.clear()
-            generateNewEquation()
+        if (correctAnswerString != null && userInput.length == correctAnswerString.length) {
+            if (userInput == correctAnswerString) {
+                correctAnswersCount++
+                currentDifficulty++
+            }
+            updateScore()
+            handler.postDelayed({
+                generateNewEquation()
+            }, 500)
         }
     }
 
-    fun displayFinalScore() {
+    private fun displayEquationWithInput() {
+        val equationWithoutAnswer = binding.equationTextView.text.toString().substringBefore("=")
+        binding.equationTextView.text = "$equationWithoutAnswer= $userInput"
+    }
+
+    private fun updateScore() {
+        binding.scoreTextView.text = "Correct: $correctAnswersCount / $totalRounds"
+    }
+
+    private fun displayFinalScore() {
         AlertDialog.Builder(requireContext())
             .setTitle("Game Over")
             .setMessage("You solved $correctAnswersCount equations correctly!")
@@ -142,3 +176,4 @@ class CalculationGameFragment : Fragment(), CountdownTimerFragment.TimerEndListe
         displayFinalScore()
     }
 }
+
