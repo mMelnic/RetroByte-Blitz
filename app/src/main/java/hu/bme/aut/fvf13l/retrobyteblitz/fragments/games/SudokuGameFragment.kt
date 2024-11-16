@@ -168,6 +168,7 @@ class SudokuGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
             .setTitle("Game Over")
             .setMessage("Time is up!")
             .setPositiveButton("OK") { _, _ -> activity?.finish() }
+            .setOnDismissListener { activity?.finish() }
             .show()
     }
 

@@ -165,6 +165,7 @@ class GridMemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
             .setTitle("Game Over")
             .setMessage("Score: $successfulRounds/$totalRounds")
             .setPositiveButton("OK") { _, _ -> activity?.finish() }
+            .setOnDismissListener { activity?.finish() }
             .show()
     }
 

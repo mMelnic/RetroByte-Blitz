@@ -134,6 +134,7 @@ class CalculationGameFragment : Fragment(), CountdownTimerFragment.TimerEndListe
             .setTitle("Game Over")
             .setMessage("You solved $correctAnswersCount equations correctly!")
             .setPositiveButton("OK") { _, _ -> activity?.finish() }
+            .setOnDismissListener { activity?.finish() }
             .show()
     }
 
