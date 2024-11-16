@@ -6,11 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import hu.bme.aut.fvf13l.retrobyteblitz.R
 import hu.bme.aut.fvf13l.retrobyteblitz.databinding.FragmentMiddleGamesBinding
-import hu.bme.aut.fvf13l.retrobyteblitz.fragments.games.CalculationGameFragment
 import hu.bme.aut.fvf13l.retrobyteblitz.fragments.games.GameActivity
-import hu.bme.aut.fvf13l.retrobyteblitz.fragments.games.SudokuGameFragment
 
 class MiddleGamesFragment : Fragment() {
 
@@ -21,7 +18,7 @@ class MiddleGamesFragment : Fragment() {
         "Daily Exercises" to listOf("Game 1A", "Game 2A", "Game 3A", "Game 4A"),
         "Logic" to listOf("Game 1B", "Sudoku", "Game 3B", "Game 4B"),
         "Memory" to listOf("MemoryGame", "Drag", "Grid", "Game 4C"),
-        "Calculation" to listOf("Calculation", "Game 2D", "Game 3D", "Game 4D"),
+        "Calculation" to listOf("Calculation", "Sequence", "Game 3D", "Game 4D"),
         "Knowledge" to listOf("Game 1E", "Game 2E", "Game 3E", "Game 4E")
     )
 
@@ -115,6 +112,13 @@ class MiddleGamesFragment : Fragment() {
             "Grid" -> {
                 val intent = Intent(requireContext(), GameActivity::class.java).apply {
                     putExtra("GAME_NAME", "Grid")
+                    putExtra("TIME_LIMIT", 60000L)
+                }
+                startActivity(intent)
+            }
+            "Sequence" -> {
+                val intent = Intent(requireContext(), GameActivity::class.java).apply {
+                    putExtra("GAME_NAME", "Sequence")
                     putExtra("TIME_LIMIT", 60000L)
                 }
                 startActivity(intent)
