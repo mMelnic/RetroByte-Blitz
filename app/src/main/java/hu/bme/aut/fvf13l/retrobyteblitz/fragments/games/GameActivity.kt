@@ -36,6 +36,7 @@ class GameActivity : AppCompatActivity(), CountdownTimerFragment.TimerEndListene
             "Drag" -> MemoryDragGameFragment()
             "Grid" -> GridMemoryGameFragment()
             "Sequence" -> SequenceGameFragment()
+            "Number Of" -> NumberOfGameFragment()
             // Add other cases for additional games as needed
             else -> null
         }
