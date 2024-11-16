@@ -25,7 +25,7 @@ class MiddleFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonDailyActivities.setOnClickListener {
-            (activity as MainActivity).openCategory("Daily Activities")
+            (activity as MainActivity).openCategory("Daily Exercises")
         }
         binding.buttonLogic.setOnClickListener {
             (activity as MainActivity).openCategory("Logic")
@@ -37,7 +37,7 @@ class MiddleFragment : Fragment() {
             (activity as MainActivity).openCategory("Calculation")
         }
         binding.buttonKnowledge.setOnClickListener {
-            (activity as MainActivity).openCategory("Knowledge")
+            (activity as MainActivity).openCategory("Visual")
         }
     }
 
