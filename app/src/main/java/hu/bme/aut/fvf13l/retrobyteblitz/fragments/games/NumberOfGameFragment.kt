@@ -6,15 +6,11 @@ import hu.bme.aut.fvf13l.retrobyteblitz.databinding.FragmentNumberOfGameBinding
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
-import androidx.gridlayout.widget.GridLayout
 
 class NumberOfGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
 
