@@ -15,11 +15,11 @@ class MiddleGamesFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val categoryGames = mapOf(
-        "Daily Exercises" to listOf("Game 1A", "Game 2A", "Game 3A", "Game 4A"),
-        "Logic" to listOf("Game 1B", "Sudoku", "Game 3B", "Game 4B"),
-        "Memory" to listOf("MemoryGame", "Drag", "Grid", "Card"),
-        "Calculation" to listOf("Calculation", "Sequence", "Number Of", "Moving Sum"),
-        "Visual" to listOf("Descending", "Game 2E", "Game 3E", "Game 4E")
+        "Daily Exercises" to listOf("Game 1A", "Game 2A", "Game 3A"),
+        "Logic" to listOf("Number Of", "Sudoku", "Game 3B"),
+        "Memory" to listOf("Colors", "Grid", "Card"),
+        "Calculation" to listOf("Calculation", "Sequence", "Moving Sum"),
+        "Visual" to listOf("Descending", "Game 2E", "Game 3E")
     )
 
     private var categoryName: String? = null
@@ -47,11 +47,10 @@ class MiddleGamesFragment : Fragment() {
 
         val games = categoryGames[categoryName] ?: emptyList()
 
-        if (games.size >= 4) {
+        if (games.size == 3) {
             binding.buttonGame1.text = games[0]
             binding.buttonGame2.text = games[1]
             binding.buttonGame3.text = games[2]
-            binding.buttonGame4.text = games[3]
         }
 
         return binding.root
@@ -73,10 +72,6 @@ class MiddleGamesFragment : Fragment() {
         binding.buttonGame3.setOnClickListener {
             launchGame(games[2])
         }
-
-        binding.buttonGame4.setOnClickListener {
-            launchGame(games[3])
-        }
     }
 
     private fun launchGame(gameName: String) {
@@ -95,9 +90,9 @@ class MiddleGamesFragment : Fragment() {
                 }
                 startActivity(intent)
             }
-            "MemoryGame" -> {
+            "Colors" -> {
                 val intent = Intent(requireContext(), GameActivity::class.java).apply {
-                    putExtra("GAME_NAME", "MemoryGame")
+                    putExtra("GAME_NAME", "Colors")
                     putExtra("TIME_LIMIT", 60000L)
                 }
                 startActivity(intent)
