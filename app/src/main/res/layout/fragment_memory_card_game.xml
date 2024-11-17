@@ -15,7 +15,8 @@
         android:rowCount="4"
         android:orientation="horizontal"
         android:layout_gravity="center"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="5dp"/>
 
     <!-- A TextView to display the score or other messages -->
     <TextView

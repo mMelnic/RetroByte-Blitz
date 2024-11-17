@@ -10,7 +10,7 @@
         android:id="@+id/topFragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="1"
         android:background="@android:color/transparent"/>
 
     <!-- Middle Fragment Container (3/6 of screen) -->
@@ -18,7 +18,7 @@
         android:id="@+id/middleFragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
+        android:layout_weight="4"
         android:background="@android:color/transparent"/>
 
     <!-- Bottom Fragment Container (1/6 of screen) -->
