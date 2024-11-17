@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="hu.bme.aut.fvf13l.retrobyteblitz.fragments.games.SlidingGameFragment"> <!-- Full package path -->
+
+    <!-- Round Info TextView -->
+    <TextView
+        android:id="@+id/roundInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:padding="16dp"
+        android:text="Round 1"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <!-- Puzzle GridLayout -->
+    <GridLayout
+        android:id="@+id/puzzleContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:columnCount="3"
+        android:rowCount="3"
+        android:padding="8dp"
+        android:layout_gravity="center" />
+
+</LinearLayout>

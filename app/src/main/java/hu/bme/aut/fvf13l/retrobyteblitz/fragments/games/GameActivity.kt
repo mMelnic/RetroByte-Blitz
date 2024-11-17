@@ -39,6 +39,7 @@ class GameActivity : AppCompatActivity(), CountdownTimerFragment.TimerEndListene
             "Moving Sum" -> MovingSumGameFragment()
             "Descending" -> DescendingGameFragment()
             "Card" -> MemoryCardGameFragment()
+            "Slider" -> SlidingGameFragment()
             // Add other cases for additional games as needed
             else -> null
         }
