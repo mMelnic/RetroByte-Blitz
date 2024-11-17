@@ -81,7 +81,7 @@ class MemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
                 // Enabling buttons only after the sequence has finished
                 setButtonsEnabled(true)
             }
-        }, 7000)
+        }, 700)
     }
 
     private fun setButtonsEnabled(enabled: Boolean) {
