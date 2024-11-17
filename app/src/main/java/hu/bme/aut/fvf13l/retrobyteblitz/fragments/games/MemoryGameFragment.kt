@@ -7,6 +7,7 @@ import android.graphics.drawable.RippleDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,8 +20,7 @@ import kotlin.random.Random
 
 class MemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
 
-    private var _binding: FragmentMemoryGameBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentMemoryGameBinding
 
     private val colors = listOf(
         Color.RED,
@@ -43,7 +43,7 @@ class MemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentMemoryGameBinding.inflate(inflater, container, false)
+        binding = FragmentMemoryGameBinding.inflate(inflater, container, false)
         setupButtons()
         startNewRound()
         return binding.root
@@ -68,6 +68,7 @@ class MemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
     }
 
     private fun startNewRound() {
+        setButtonsEnabled(false)
         currentSequence.clear()
         userSequence.clear()
         binding.userSequenceContainer.removeAllViews()
@@ -76,12 +77,23 @@ class MemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
         }
         binding.roundInfo.text = "Round $round"
         handler.postDelayed({
-            displaySequence()
-        }, 1000) // 1 second delay
+            displaySequence {
+                // Enabling buttons only after the sequence has finished
+                setButtonsEnabled(true)
+            }
+        }, 7000)
     }
 
+    private fun setButtonsEnabled(enabled: Boolean) {
+        for (i in 0 until binding.buttonsContainer.childCount) {
+            val view = binding.buttonsContainer.getChildAt(i)
+            if (view is Button) {
+                view.isEnabled = enabled
+            }
+        }
+    }
 
-    private fun displaySequence() {
+    private fun displaySequence(onSequenceFinished: () -> Unit) {
         var index = 0
         handler.postDelayed(object : Runnable {
             override fun run() {
@@ -91,38 +103,47 @@ class MemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
                         binding.colorDisplay.setBackgroundColor(Color.WHITE)
                         index++
                         handler.postDelayed(this, 500)
-                    }, 500)
+                    }, 900)
+                } else {
+                    onSequenceFinished()
                 }
             }
-        }, 500)
+        }, 200)
     }
 
+
     private fun onColorSelected(colorIndex: Int) {
-        userSequence.add(colorIndex)
-        addColorToSequence(colorIndex)
-        if (userSequence[userSequence.size - 1] != currentSequence[userSequence.size - 1]) {
-            totalRounds++
-            binding.scoreInfo.text = "Score: $successfulRounds/$totalRounds"
-            round = 1
-            handler.postDelayed({
-                startNewRound()
-            }, 1000) // 1 second delay
-        } else if (userSequence.size == currentSequence.size) {
-            successfulRounds++
-            totalRounds++
-            binding.scoreInfo.text = "Score: $successfulRounds/$totalRounds"
-            round++
-            handler.postDelayed({
-                startNewRound()
-            }, 1000) // 1 second delay
+        if (userSequence.size < currentSequence.size) {
+            userSequence.add(colorIndex)
+            addColorToSequence(colorIndex)
+
+            if (userSequence[userSequence.size - 1] != currentSequence[userSequence.size - 1]) {
+                totalRounds++
+                binding.scoreInfo.text = "Score: $successfulRounds/$totalRounds"
+                round = 1
+                handler.postDelayed({
+                    startNewRound()
+                }, 1000)
+            } else if (userSequence.size == currentSequence.size) {
+                successfulRounds++
+                totalRounds++
+                binding.scoreInfo.text = "Score: $successfulRounds/$totalRounds"
+                round++
+                handler.postDelayed({
+                    startNewRound()
+                }, 1000)
+            }
+        } else {
+            Log.d("MemoryGame", "User pressed too many buttons!")
         }
     }
+
 
     private fun addColorToSequence(colorIndex: Int) {
         val view = View(context)
         view.setBackgroundColor(colors[colorIndex])
         val params = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f)
-        params.setMargins(2, 2, 2, 2) // Light gray lines as dividers
+        params.setMargins(2, 2, 2, 2) // Thin lines as dividers
         view.layoutParams = params
         binding.userSequenceContainer.addView(view)
     }
@@ -134,10 +155,5 @@ class MemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
             .setPositiveButton("OK") { _, _ -> activity?.finish() }
             .setOnDismissListener { activity?.finish() }
             .show()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
