@@ -34,12 +34,4 @@ class MainActivity : AppCompatActivity() {
             .addToBackStack("GAME_AND_TIMER_STACK")
             .commit()
     }
-
-    fun startTimer(timeLimit: Long) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.bottomFragmentContainer, CountdownTimerFragment.newInstance(timeLimit))
-            .addToBackStack("GAME_AND_TIMER_STACK")
-            .commit()
-    }
-
 }

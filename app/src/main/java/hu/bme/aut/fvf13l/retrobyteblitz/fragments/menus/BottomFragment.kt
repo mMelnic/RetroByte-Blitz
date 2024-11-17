@@ -11,14 +11,13 @@ import hu.bme.aut.fvf13l.retrobyteblitz.databinding.FragmentBottomBinding
 
 class BottomFragment : Fragment() {
 
-    private var _binding: FragmentBottomBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentBottomBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentBottomBinding.inflate(inflater, container, false)
+        binding = FragmentBottomBinding.inflate(inflater, container, false)
         binding.buttonNav1.setOnClickListener {
             val intent = Intent(activity, MainActivity::class.java)
             startActivity(intent)
@@ -28,8 +27,4 @@ class BottomFragment : Fragment() {
 
     // To implement onClick listeners for navigation buttons
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 }
