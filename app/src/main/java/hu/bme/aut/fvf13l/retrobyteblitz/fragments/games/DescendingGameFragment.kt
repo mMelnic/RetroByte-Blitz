@@ -155,6 +155,7 @@ class DescendingGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
         } else {
             Toast.makeText(requireContext(), "Incorrect. Try again!", Toast.LENGTH_SHORT).show()
         }
+        updateScore()
 
         // Start a new round after a brief delay
         handler.postDelayed({
@@ -164,6 +165,9 @@ class DescendingGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
             binding.answerView3.setImageResource(0)
             startNewRound()
         }, 1000)
+    }
+    private fun updateScore() {
+        binding.scoreTextView.text = "Correct: $solvedRounds / $totalRounds"
     }
 
     override fun onTimerEnd() {
