@@ -33,7 +33,6 @@ class GameActivity : AppCompatActivity(), CountdownTimerFragment.TimerEndListene
             "Sudoku" -> SudokuGameFragment()
             "Calculation" -> CalculationGameFragment()
             "MemoryGame" -> MemoryGameFragment()
-            "Drag" -> MemoryDragGameFragment()
             "Grid" -> GridMemoryGameFragment()
             "Sequence" -> SequenceGameFragment()
             "Number Of" -> NumberOfGameFragment()

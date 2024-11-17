@@ -102,13 +102,6 @@ class MiddleGamesFragment : Fragment() {
                 }
                 startActivity(intent)
             }
-            "Drag" -> {
-                val intent = Intent(requireContext(), GameActivity::class.java).apply {
-                    putExtra("GAME_NAME", "Drag")
-                    putExtra("TIME_LIMIT", 60000L)
-                }
-                startActivity(intent)
-            }
             "Grid" -> {
                 val intent = Intent(requireContext(), GameActivity::class.java).apply {
                     putExtra("GAME_NAME", "Grid")
