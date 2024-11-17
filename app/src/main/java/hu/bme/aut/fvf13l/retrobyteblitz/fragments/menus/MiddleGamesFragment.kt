@@ -19,7 +19,7 @@ class MiddleGamesFragment : Fragment() {
         "Logic" to listOf("Game 1B", "Sudoku", "Game 3B", "Game 4B"),
         "Memory" to listOf("MemoryGame", "Drag", "Grid", "Game 4C"),
         "Calculation" to listOf("Calculation", "Sequence", "Number Of", "Moving Sum"),
-        "Knowledge" to listOf("Game 1E", "Game 2E", "Game 3E", "Game 4E")
+        "Visual" to listOf("Descending", "Game 2E", "Game 3E", "Game 4E")
     )
 
     private var categoryName: String? = null
@@ -133,6 +133,13 @@ class MiddleGamesFragment : Fragment() {
             "Moving Sum" -> {
                 val intent = Intent(requireContext(), GameActivity::class.java).apply {
                     putExtra("GAME_NAME", "Moving Sum")
+                    putExtra("TIME_LIMIT", 60000L)
+                }
+                startActivity(intent)
+            }
+            "Descending" -> {
+                val intent = Intent(requireContext(), GameActivity::class.java).apply {
+                    putExtra("GAME_NAME", "Descending")
                     putExtra("TIME_LIMIT", 60000L)
                 }
                 startActivity(intent)
