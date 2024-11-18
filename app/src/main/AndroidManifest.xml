@@ -20,7 +20,10 @@
         android:theme="@style/Theme.RetroByteBlitz"
         tools:targetApi="31">
 
-<!--        <provider-->
+        <service android:name="hu.bme.aut.fvf13l.retrobyteblitz.service.CameraService"
+            android:exported="false" />
+
+        <!--        <provider-->
 <!--            android:name="androidx.core.content.FileProvider"-->
 <!--            android:authorities="${applicationId}.provider"-->
 <!--            android:exported="false"-->
