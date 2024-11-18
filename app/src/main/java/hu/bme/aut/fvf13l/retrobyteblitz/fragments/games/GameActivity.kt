@@ -97,7 +97,7 @@ class GameActivity : AppCompatActivity(), CountdownTimerFragment.TimerEndListene
             "Moving Sum" -> MovingSumGameFragment()
             "Descending" -> DescendingGameFragment()
             "Card" -> MemoryCardGameFragment()
-            "Slider" -> SlidingGameFragment()
+            "Stroop" -> StroopGameFragment()
             else -> null
         }
     }
