@@ -53,7 +53,13 @@ class SlidingGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener 
     }
 
     private fun loadOriginalImage() {
-        originalImage = BitmapFactory.decodeResource(resources, R.drawable.sample_image)
+        // Get the image passed as a Bitmap from the arguments
+        val imageBitmap = arguments?.getParcelable<Bitmap>("image")
+
+        // Use the passed image if available, otherwise use the default image
+        originalImage = imageBitmap ?: BitmapFactory.decodeResource(resources, R.drawable.sample_image)
+
+        // Scale the image to fit the container
         val containerWidth = binding.puzzleContainer.width
         val containerHeight = binding.puzzleContainer.height
         originalImage = Bitmap.createScaledBitmap(
@@ -63,6 +69,8 @@ class SlidingGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener 
             true
         )
     }
+
+
 
     private fun splitImageIntoTiles() {
         val tileWidth = originalImage.width / gridSize
