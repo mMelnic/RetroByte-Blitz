@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/tvScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Score: 0/0"
+        android:textSize="18sp"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/tvColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:fontFamily="sans-serif-black"
+        android:text="Color"
+        android:textSize="70sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnRed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Red"
+            android:textSize="18sp"
+            android:backgroundTint="@color/red_color"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/btnOrange"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Orange"
+            android:textSize="18sp"
+            android:backgroundTint="@color/orange_color"
+            android:layout_marginStart="8dp"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/btnYellow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Yellow"
+            android:textSize="18sp"
+            android:backgroundTint="@color/yellow_color"
+            android:layout_marginStart="8dp"
+            android:textColor="@android:color/white"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnGreen"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Green"
+            android:backgroundTint="@color/green_color"
+            android:layout_marginStart="8dp"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/btnBlue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Blue"
+            android:backgroundTint="@color/blue_color"
+            android:layout_marginStart="8dp"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/btnPurple"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Purple"
+            android:backgroundTint="@color/purple_500"
+            android:layout_marginStart="8dp"
+            android:textColor="@android:color/white"/>
+
+    </LinearLayout>
+</LinearLayout>
