@@ -90,7 +90,7 @@ class GameActivity : AppCompatActivity(), CountdownTimerFragment.TimerEndListene
         return when (gameName) {
             "Sudoku" -> SudokuGameFragment()
             "Calculation" -> CalculationGameFragment()
-            "MemoryGame" -> MemoryGameFragment()
+            "Colors" -> MemoryGameFragment()
             "Grid" -> GridMemoryGameFragment()
             "Sequence" -> SequenceGameFragment()
             "Number Of" -> NumberOfGameFragment()
