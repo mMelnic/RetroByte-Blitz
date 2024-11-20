@@ -16,8 +16,7 @@ import androidx.appcompat.app.AlertDialog
 
 class GridMemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
 
-    private var _binding: FragmentGridMemoryGameBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentGridMemoryGameBinding
 
     private var gridSize = 9
     private var round = 1
@@ -31,7 +30,7 @@ class GridMemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentGridMemoryGameBinding.inflate(inflater, container, false)
+        binding = FragmentGridMemoryGameBinding.inflate(inflater, container, false)
         setupGrid()
         startNewRound()
         return binding.root
@@ -167,11 +166,6 @@ class GridMemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
             .setPositiveButton("OK") { _, _ -> activity?.finish() }
             .setOnDismissListener { activity?.finish() }
             .show()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
 
