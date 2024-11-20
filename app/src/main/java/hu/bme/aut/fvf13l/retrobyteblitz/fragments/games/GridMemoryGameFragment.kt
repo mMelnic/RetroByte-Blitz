@@ -84,8 +84,6 @@ class GridMemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
                     view.setOnClickListener { onSquareClicked(i) }
                     binding.gridLayout.addView(view)
 
-                    // Debug log
-                    println("View added to GridLayout: $i with size $cellWidth x $cellHeight")
                 }
             }
         })
@@ -101,7 +99,6 @@ class GridMemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
             userSelectedSquares.add(index)
             view.setBackgroundColor(Color.YELLOW)
         }
-        println("Selected squares for this round: $userSelectedSquares")
 
         if (userSelectedSquares.size == correctSquares.size) {
             checkUserSolution()
@@ -122,8 +119,6 @@ class GridMemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
 
         binding.roundInfo.text = "Round $round"
         binding.scoreInfo.text = "Score: $successfulRounds/$totalRounds"
-
-        println("Correct squares for this round: $correctSquares")
 
         handler.postDelayed({
             correctSquares.forEach {
