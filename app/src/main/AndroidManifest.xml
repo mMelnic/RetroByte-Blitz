@@ -40,6 +40,12 @@
         </activity>
 
         <activity
+            android:name=".fragments.games.DailyExercisesActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+
+        <activity
             android:name=".auth.LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
