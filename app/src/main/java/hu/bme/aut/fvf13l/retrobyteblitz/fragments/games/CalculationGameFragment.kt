@@ -1,5 +1,7 @@
 package hu.bme.aut.fvf13l.retrobyteblitz.fragments.games
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -167,9 +169,20 @@ class CalculationGameFragment : Fragment(), CountdownTimerFragment.TimerEndListe
         AlertDialog.Builder(requireContext())
             .setTitle("Game Over")
             .setMessage("You solved $correctAnswersCount equations correctly!")
-            .setPositiveButton("OK") { _, _ -> activity?.finish() }
+            .setPositiveButton("OK") { _, _ -> sendResultAndFinish() }
             .setOnDismissListener { activity?.finish() }
             .show()
+    }
+
+    private fun sendResultAndFinish() {
+        // Prepare the result data
+        val resultIntent = Intent().apply {
+            putExtra("SUCCESSFUL_ROUNDS", correctAnswersCount)
+        }
+
+        // Send result back to the calling activity
+        activity?.setResult(Activity.RESULT_OK, resultIntent)
+        activity?.finish()  // Finish the activity after sending the result
     }
 
     override fun onTimerEnd() {

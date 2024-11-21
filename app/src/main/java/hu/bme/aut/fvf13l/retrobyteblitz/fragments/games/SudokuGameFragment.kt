@@ -1,5 +1,7 @@
 package hu.bme.aut.fvf13l.retrobyteblitz.fragments.games
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
@@ -29,6 +31,7 @@ class SudokuGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
     private val binding get() = _binding!!
     private lateinit var solutionGrid: List<List<Int>>
     private lateinit var currentGrid: Array<Array<EditText>>
+    private var successfulRounds = 0
 //    private val difficultyTimeLimits = mapOf(
 //        "easy" to 300000L,    // 5 minutes for easy
 //        "medium" to 450000L,  // 7.5 minutes for medium
@@ -147,6 +150,7 @@ class SudokuGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
 
     private fun onGridSolved(callback: () -> Unit) {
         if (checkIfGridSolved()) {
+            successfulRounds++
             callback()
         }
     }
@@ -170,6 +174,14 @@ class SudokuGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
             .setPositiveButton("OK") { _, _ -> activity?.finish() }
             .setOnDismissListener { activity?.finish() }
             .show()
+    }
+
+    private fun sendResultAndFinish() {
+        val resultIntent = Intent().apply {
+            putExtra("SUCCESSFUL_ROUNDS", successfulRounds)
+        }
+        activity?.setResult(Activity.RESULT_OK, resultIntent)
+        activity?.finish()
     }
 
     override fun onTimerEnd() {

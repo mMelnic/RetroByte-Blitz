@@ -2,6 +2,8 @@ package hu.bme.aut.fvf13l.retrobyteblitz.fragments.games
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -46,6 +48,7 @@ class MovingSumGameFragment : Fragment(), CountdownTimerFragment.TimerEndListene
 
     private fun startNewRound() {
         binding.numberContainer.removeAllViews()
+        binding.questionTextView.text = "Sum of moving ?"
 
         val baseNumbers = 5 // Minimum numbers to display in the first round
         val maxNumbers = 20 // Maximum numbers allowed on the board
@@ -189,9 +192,17 @@ class MovingSumGameFragment : Fragment(), CountdownTimerFragment.TimerEndListene
         AlertDialog.Builder(requireContext())
             .setTitle("Game Over")
             .setMessage("You solved $correctAnswers correctly!")
-            .setPositiveButton("OK") { _, _ -> activity?.finish() }
+            .setPositiveButton("OK") { _, _ -> sendResultAndFinish() }
             .setOnDismissListener { activity?.finish() }
             .show()
+    }
+
+    private fun sendResultAndFinish() {
+        val resultIntent = Intent().apply {
+            putExtra("SUCCESSFUL_ROUNDS", correctAnswers)
+        }
+        activity?.setResult(Activity.RESULT_OK, resultIntent)
+        activity?.finish()
     }
 
 }

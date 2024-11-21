@@ -1,5 +1,6 @@
 package hu.bme.aut.fvf13l.retrobyteblitz.fragments.menus
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import hu.bme.aut.fvf13l.retrobyteblitz.MainActivity
 import hu.bme.aut.fvf13l.retrobyteblitz.databinding.FragmentMiddleBinding
+import hu.bme.aut.fvf13l.retrobyteblitz.fragments.games.DailyExercisesActivity
 
 class MiddleFragment : Fragment() {
 
@@ -25,7 +27,8 @@ class MiddleFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonDailyActivities.setOnClickListener {
-            (activity as MainActivity).openCategory("Daily Exercises")
+            val intent = Intent(requireContext(), DailyExercisesActivity::class.java)
+            startActivity(intent)
         }
         binding.buttonLogic.setOnClickListener {
             (activity as MainActivity).openCategory("Logic")

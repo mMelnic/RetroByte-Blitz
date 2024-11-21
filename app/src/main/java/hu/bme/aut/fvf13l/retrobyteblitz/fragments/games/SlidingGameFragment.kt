@@ -1,5 +1,7 @@
 package hu.bme.aut.fvf13l.retrobyteblitz.fragments.games
 
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -203,8 +205,16 @@ class SlidingGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener 
         AlertDialog.Builder(requireContext())
             .setTitle("Game Over")
             .setMessage("Score: $solvedGames")
-            .setPositiveButton("OK") { _, _ -> activity?.finish() }
-            .setOnDismissListener { activity?.finish() }
+            .setPositiveButton("OK") { _, _ -> sendResultAndFinish() }
+            .setOnDismissListener { sendResultAndFinish() }
             .show()
+    }
+
+    private fun sendResultAndFinish() {
+        val resultIntent = Intent().apply {
+            putExtra("SUCCESSFUL_ROUNDS", solvedGames)
+        }
+        activity?.setResult(Activity.RESULT_OK, resultIntent)
+        activity?.finish()
     }
 }

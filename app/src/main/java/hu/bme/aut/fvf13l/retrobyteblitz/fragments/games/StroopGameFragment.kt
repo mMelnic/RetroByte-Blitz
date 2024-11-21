@@ -1,5 +1,7 @@
 package hu.bme.aut.fvf13l.retrobyteblitz.fragments.games
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -93,8 +95,16 @@ class StroopGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
         AlertDialog.Builder(requireContext())
             .setTitle("Game Over")
             .setMessage("Score: $correctAnswers/$totalRounds")
-            .setPositiveButton("OK") { _, _ -> activity?.finish() }
-            .setOnDismissListener { activity?.finish() }
+            .setPositiveButton("OK") { _, _ -> sendResultAndFinish() }
+            .setOnDismissListener { sendResultAndFinish() }
             .show()
+    }
+
+    private fun sendResultAndFinish() {
+        val resultIntent = Intent().apply {
+            putExtra("SUCCESSFUL_ROUNDS", correctAnswers)
+        }
+        activity?.setResult(Activity.RESULT_OK, resultIntent)
+        activity?.finish()
     }
 }
