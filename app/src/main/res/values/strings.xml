@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">RetroByte Blitz</string>
+    <string name="activity_name">Daily Exercises</string>
+
+    <!-- Instructions for games -->
+    <string name="sudoku_instructions">Solve the Sudoku puzzle.</string>
+    <string name="calculation_instructions">Solve the math calculations.</string>
+    <string name="colors_instructions">Match the colors in the grid.</string>
+    <string name="grid_instructions">Find matching pairs of cards.</string>
+    <string name="sequence_instructions">Complete the number sequence.</string>
+    <string name="number_of_instructions">Count the objects in the image.</string>
+    <string name="moving_sum_instructions">Calculate the moving sum of numbers.</string>
+    <string name="descending_instructions">Arrange the numbers in descending order.</string>
+    <string name="card_instructions">Match the cards in pairs.</string>
+    <string name="slider_instructions">Slide the pieces to form the image.</string>
+    <string name="stroop_instructions">Identify the word that matches the color.</string>
+
+    <!-- Other UI strings -->
+    <string name="today_date">Todays Date: %1$s</string>
+    <string name="instructions_title">Instructions for %1$s</string>
+    <string name="start_button">Start</string>
+    <string name="no_instructions">No instructions available for this game.</string>
+    <string name="daily_exercises_completed">Daily Exercises Completed!</string>
+
 </resources>
