@@ -1,5 +1,7 @@
 package hu.bme.aut.fvf13l.retrobyteblitz.fragments.games
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -10,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import hu.bme.aut.fvf13l.retrobyteblitz.databinding.FragmentRomanNumeralsGameBinding
 import kotlin.random.Random
@@ -28,15 +29,15 @@ class RomanNumeralsGameFragment : Fragment() {
     private val romanArabicPairs = mutableMapOf<TextView, TextView>()
 
     private fun generateRomanNumeral(level: Int, usedValues: MutableSet<Int>): Pair<String, Int> {
-        val maxValue = when (level) {
-            1 -> 10 // Level 1: Roman numerals between 1-10
-            2 -> 50 // Level 2: Roman numerals between 1-50
+        val maxValue = when {
+            level <= 3 -> 20 // Level 1: Roman numerals between 1-10
+            level <= 7 -> 50 // Level 2: Roman numerals between 1-50
             else -> 100 // Level 3 and beyond: 1-100
         }
 
         var value: Int
         do {
-            value = Random.nextInt(1, maxValue + 1) // Avoid duplicate pairs
+            value = Random.nextInt(1, maxValue + 1) // To avoid duplicate pairs
         } while (usedValues.contains(value))
         usedValues.add(value)
 
@@ -83,13 +84,12 @@ class RomanNumeralsGameFragment : Fragment() {
         romanArabicPairs.clear()
         matchedPairs = 0
 
-        val pairsCount = 2 + round // Start with 3 pairs and increase with each round
+        val pairsCount = 1 + round
         val usedValues = mutableSetOf<Int>()
 
         for (i in 1..pairsCount) {
             val (roman, value) = generateRomanNumeral(round, usedValues)
 
-            // Create Roman numeral TextView
             val romanTextView = createTextView(roman)
             val arabicTextView = createTextView(value.toString())
 
@@ -122,13 +122,7 @@ class RomanNumeralsGameFragment : Fragment() {
 
             setOnClickListener { onNumberClicked(this) }
 
-            // Assign random velocity (dx, dy) and store in tag
-            val randomDx = Random.nextFloat() * 10 - 5 // Random velocity between -5 and 5
-            val randomDy = Random.nextFloat() * 10 - 5
-            tag = Pair(randomDx, randomDy) // Save velocity in tag
-
-            // Position the text view using post to ensure container dimensions are available
-            post {
+            binding.gameContainer.post {
                 val containerWidth = binding.gameContainer.width
                 val containerHeight = binding.gameContainer.height
 
@@ -142,39 +136,28 @@ class RomanNumeralsGameFragment : Fragment() {
     }
 
     private fun startMovingViews() {
-        val moveRunnable = object : Runnable {
-            override fun run() {
-                binding.gameContainer.children.forEach { child ->
-                    if (child is TextView) {
-                        moveView(child)
-                    }
-                }
-                handler.postDelayed(this, 16) // ~60 FPS
-            }
+        movingViews.forEach { view ->
+            animateView(view)
         }
-        handler.post(moveRunnable)
     }
 
     private fun onNumberClicked(textView: TextView) {
         if (!textView.isClickable) return // Already matched, ignore
 
-        // If the same view is clicked twice, deselect it
+        // Deselecting view
         if (selectedTextView == textView) {
             textView.setBackgroundColor(Color.WHITE)
             selectedTextView = null
             return
         }
 
-        // Check if the selected views are of the same type (both Roman or both Arabic)
-        val isRoman = textView.text.matches(Regex("^[IVXLCDM]+$")) // Roman numeral regex
+        val isRoman = textView.text.matches(Regex("^[IVXLCDM]+$"))
         val isFirstRoman = selectedTextView?.text?.matches(Regex("^[IVXLCDM]+$")) ?: !isRoman
 
         if (selectedTextView == null) {
-            // First selection
             selectedTextView = textView
             textView.setBackgroundColor(Color.LTGRAY) // Highlight selection
         } else if (isFirstRoman == isRoman) {
-            // Prevent selecting two of the same type
             Toast.makeText(requireContext(), "Cannot select two of the same type", Toast.LENGTH_SHORT).show()
         } else {
             // Check if the pair matches
@@ -200,31 +183,31 @@ class RomanNumeralsGameFragment : Fragment() {
         }
     }
 
-    private fun moveView(view: TextView) {
-        val currentX = view.x
-        val currentY = view.y
+    private fun animateView(view: TextView) {
+        binding.gameContainer.post {
+            val containerWidth = binding.gameContainer.width
+            val containerHeight = binding.gameContainer.height
 
-        val velocity = view.tag as Pair<Float, Float>
-        var dx = velocity.first
-        var dy = velocity.second
+            val randomX = Random.nextInt(0, containerWidth - view.width).toFloat()
+            val randomY = Random.nextInt(0, containerHeight - view.height).toFloat()
 
-        val containerWidth = binding.gameContainer.width
-        val containerHeight = binding.gameContainer.height
-        val viewWidth = view.width
-        val viewHeight = view.height
+            val animX = ObjectAnimator.ofFloat(view, "x", view.x, randomX).apply {
+                duration = (1000..4000).random().toLong()
+                repeatCount = ObjectAnimator.INFINITE
+                repeatMode = ObjectAnimator.REVERSE
+            }
 
-        if (currentX + dx <= 0 || currentX + dx + viewWidth >= containerWidth) dx = -dx
-        if (currentY + dy <= 0 || currentY + dy + viewHeight >= containerHeight) dy = -dy
+            val animY = ObjectAnimator.ofFloat(view, "y", view.y, randomY).apply {
+                duration = (1000..4000).random().toLong()
+                repeatCount = ObjectAnimator.INFINITE
+                repeatMode = ObjectAnimator.REVERSE
+            }
 
-        view.x = (currentX + dx).coerceIn(0f, (containerWidth - viewWidth).toFloat())
-        view.y = (currentY + dy).coerceIn(0f, (containerHeight - viewHeight).toFloat())
-
-        view.tag = Pair(dx, dy)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        handler.removeCallbacksAndMessages(null)
+            AnimatorSet().apply {
+                playTogether(animX, animY)
+                start()
+            }
+        }
     }
 }
 
