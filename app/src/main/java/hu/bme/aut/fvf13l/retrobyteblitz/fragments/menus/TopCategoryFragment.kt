@@ -41,8 +41,15 @@ class TopCategoryFragment : Fragment() {
         binding.categoryTitleTextView.text = categoryTitle
 
         binding.backButton.setOnClickListener {
-            parentFragmentManager.popBackStack()
+            val parentActivity = activity
+
+            if (parentActivity != null && parentFragmentManager.backStackEntryCount > 0) {
+                parentFragmentManager.popBackStack()
+            } else {
+                parentActivity?.onBackPressed()
+            }
         }
+
     }
 
     override fun onDestroyView() {
