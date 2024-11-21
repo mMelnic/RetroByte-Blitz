@@ -98,6 +98,7 @@ class GameActivity : AppCompatActivity(), CountdownTimerFragment.TimerEndListene
             "Descending" -> DescendingGameFragment()
             "Card" -> MemoryCardGameFragment()
             "Stroop" -> StroopGameFragment()
+            "RomanNum" -> RomanNumeralsGameFragment()
             else -> null
         }
     }
