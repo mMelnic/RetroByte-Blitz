@@ -170,8 +170,8 @@ class SudokuGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
     private fun displayFinalScore() {
         AlertDialog.Builder(requireContext())
             .setTitle("Game Over")
-            .setMessage("Time is up!")
-            .setPositiveButton("OK") { _, _ -> activity?.finish() }
+            .setMessage("Time is up! Solved rounds: $successfulRounds")
+            .setPositiveButton("OK") { _, _ -> sendResultAndFinish() }
             .setOnDismissListener { activity?.finish() }
             .show()
     }
