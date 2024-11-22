@@ -4,10 +4,13 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import hu.bme.aut.fvf13l.retrobyteblitz.model.DailyExerciseProgress
+import hu.bme.aut.fvf13l.retrobyteblitz.model.DailyExerciseProgressDao
 
-@Database(entities = [User::class], version = 1)
+@Database(entities = [User::class, DailyExerciseProgress::class], version = 2)
 abstract class UserDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
+    abstract fun dailyExerciseProgressDao(): DailyExerciseProgressDao
 
     companion object {
         @Volatile
@@ -19,7 +22,9 @@ abstract class UserDatabase : RoomDatabase() {
                     context.applicationContext,
                     UserDatabase::class.java,
                     "retrobyte_db"
-                ).build()
+                )
+                    .fallbackToDestructiveMigration() // Handle version changes
+                    .build()
                 INSTANCE = instance
                 instance
             }
