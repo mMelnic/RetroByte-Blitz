@@ -1,4 +1,4 @@
-package hu.bme.aut.fvf13l.retrobyteblitz.fragments.games
+package hu.bme.aut.fvf13l.retrobyteblitz.model
 
 import android.app.Activity
 import android.content.ComponentName
@@ -15,6 +15,19 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import hu.bme.aut.fvf13l.retrobyteblitz.R
+import hu.bme.aut.fvf13l.retrobyteblitz.fragments.games.CalculationGameFragment
+import hu.bme.aut.fvf13l.retrobyteblitz.fragments.games.CountdownTimerFragment
+import hu.bme.aut.fvf13l.retrobyteblitz.fragments.games.DescendingGameFragment
+import hu.bme.aut.fvf13l.retrobyteblitz.fragments.games.GridMemoryGameFragment
+import hu.bme.aut.fvf13l.retrobyteblitz.fragments.games.MemoryCardGameFragment
+import hu.bme.aut.fvf13l.retrobyteblitz.fragments.games.MemoryGameFragment
+import hu.bme.aut.fvf13l.retrobyteblitz.fragments.games.MovingSumGameFragment
+import hu.bme.aut.fvf13l.retrobyteblitz.fragments.games.NumberOfGameFragment
+import hu.bme.aut.fvf13l.retrobyteblitz.fragments.games.RomanNumeralsGameFragment
+import hu.bme.aut.fvf13l.retrobyteblitz.fragments.games.SequenceGameFragment
+import hu.bme.aut.fvf13l.retrobyteblitz.fragments.games.SlidingGameFragment
+import hu.bme.aut.fvf13l.retrobyteblitz.fragments.games.StroopGameFragment
+import hu.bme.aut.fvf13l.retrobyteblitz.fragments.games.SudokuGameFragment
 import hu.bme.aut.fvf13l.retrobyteblitz.fragments.menus.TopCategoryFragment
 import hu.bme.aut.fvf13l.retrobyteblitz.service.CameraService
 
@@ -81,7 +94,9 @@ class GameActivity : AppCompatActivity(), CountdownTimerFragment.TimerEndListene
             }
 
             supportFragmentManager.beginTransaction()
-                .replace(R.id.bottomGameFragmentContainer, CountdownTimerFragment.newInstance(timeLimit))
+                .replace(R.id.bottomGameFragmentContainer,
+                    CountdownTimerFragment.newInstance(timeLimit)
+                )
                 .commit()
         }
     }
@@ -162,7 +177,9 @@ class GameActivity : AppCompatActivity(), CountdownTimerFragment.TimerEndListene
             .commit()
 
         supportFragmentManager.beginTransaction()
-            .replace(R.id.bottomGameFragmentContainer, CountdownTimerFragment.newInstance(timeLimit))
+            .replace(R.id.bottomGameFragmentContainer,
+                CountdownTimerFragment.newInstance(timeLimit)
+            )
             .commit()
     }
 

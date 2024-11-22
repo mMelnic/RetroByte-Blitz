@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import hu.bme.aut.fvf13l.retrobyteblitz.databinding.FragmentMiddleGamesBinding
-import hu.bme.aut.fvf13l.retrobyteblitz.fragments.games.GameActivity
+import hu.bme.aut.fvf13l.retrobyteblitz.model.GameActivity
 
 class MiddleGamesFragment : Fragment() {
 

@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import hu.bme.aut.fvf13l.retrobyteblitz.MainActivity
 import hu.bme.aut.fvf13l.retrobyteblitz.databinding.FragmentMiddleBinding
-import hu.bme.aut.fvf13l.retrobyteblitz.fragments.games.DailyExercisesActivity
+import hu.bme.aut.fvf13l.retrobyteblitz.model.DailyExercisesActivity
 
 class MiddleFragment : Fragment() {
 
