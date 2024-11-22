@@ -13,6 +13,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import hu.bme.aut.fvf13l.retrobyteblitz.R
 import hu.bme.aut.fvf13l.retrobyteblitz.databinding.FragmentDescendingGameBinding
+import hu.bme.aut.fvf13l.retrobyteblitz.utility.GameDifficultyUtils
+import hu.bme.aut.fvf13l.retrobyteblitz.utility.ScoreUtility
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -172,25 +174,33 @@ class DescendingGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
         binding.scoreTextView.text = "Correct: $solvedRounds / $totalRounds"
     }
 
-    override fun onTimerEnd() {
-        // Show the dialog with the score
-        AlertDialog.Builder(requireContext())
-            .setTitle("Game Over")
-            .setMessage("Score: $solvedRounds/$totalRounds")
-            .setPositiveButton("OK") { _, _ -> sendResultAndFinish() }
-            .setOnDismissListener { sendResultAndFinish() }
-            .show()
-    }
+    private fun displayFinalScore() {
+        var gameName = requireActivity().intent.getStringExtra("GAME_NAME") ?: "Default Game"
+        val score = GameDifficultyUtils.calculateScore(gameName, solvedRounds)
 
-    private fun sendResultAndFinish() {
-        // Prepare the result data
-        val resultIntent = Intent().apply {
-            putExtra("SUCCESSFUL_ROUNDS", solvedRounds)
+        val scoreLayout = ScoreUtility.createScoreLayout(requireContext(), score) { _ ->
         }
 
-        // Send result back to the calling activity
+        AlertDialog.Builder(requireContext())
+            .setTitle("Game Over")
+            .setView(scoreLayout)
+            .setMessage("You solved $solvedRounds out of $totalRounds rounds!")
+            .setPositiveButton("OK") { _, _ -> sendResultAndFinish(score) }
+            .setOnDismissListener { activity?.finish() }
+            .show()
+
+    }
+
+    private fun sendResultAndFinish(score: Int) {
+        val resultIntent = Intent().apply {
+            putExtra("SCORE", score)
+        }
         activity?.setResult(Activity.RESULT_OK, resultIntent)
-        activity?.finish()  // Finish the activity after sending the result
+        activity?.finish()
+    }
+
+    override fun onTimerEnd() {
+        displayFinalScore()
     }
 }
 

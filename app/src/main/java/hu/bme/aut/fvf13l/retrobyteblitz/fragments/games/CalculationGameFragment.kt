@@ -1,16 +1,23 @@
 package hu.bme.aut.fvf13l.retrobyteblitz.fragments.games
 
+import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import hu.bme.aut.fvf13l.retrobyteblitz.databinding.FragmentCalculationGameBinding
+import hu.bme.aut.fvf13l.retrobyteblitz.utility.GameDifficultyUtils
+import hu.bme.aut.fvf13l.retrobyteblitz.utility.ScoreUtility
 
 class CalculationGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
 
@@ -20,7 +27,6 @@ class CalculationGameFragment : Fragment(), CountdownTimerFragment.TimerEndListe
     private var currentDifficulty = 1
     private var userInput = ""
     private val handler = Handler(Looper.getMainLooper())
-
     private val maxAdditionBound: Int
         get() = when {
             currentDifficulty <= 5 -> 10
@@ -166,27 +172,31 @@ class CalculationGameFragment : Fragment(), CountdownTimerFragment.TimerEndListe
     }
 
     private fun displayFinalScore() {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Game Over")
-            .setMessage("You solved $correctAnswersCount equations correctly!")
-            .setPositiveButton("OK") { _, _ -> sendResultAndFinish() }
-            .setOnDismissListener { activity?.finish() }
-            .show()
-    }
+        var gameName = requireActivity().intent.getStringExtra("GAME_NAME") ?: "Default Game"
+        val score = GameDifficultyUtils.calculateScore(gameName, correctAnswersCount)
 
-    private fun sendResultAndFinish() {
-        // Prepare the result data
-        val resultIntent = Intent().apply {
-            putExtra("SUCCESSFUL_ROUNDS", correctAnswersCount)
+        val scoreLayout = ScoreUtility.createScoreLayout(requireContext(), score) { _ ->
         }
 
-        // Send result back to the calling activity
+        AlertDialog.Builder(requireContext())
+            .setTitle("Game Over")
+            .setView(scoreLayout)
+            .setMessage("You solved $correctAnswersCount equations correctly!")
+            .setPositiveButton("OK") { _, _ -> sendResultAndFinish(score) }
+            .setOnDismissListener { activity?.finish() }
+            .show()
+
+    }
+
+    private fun sendResultAndFinish(score: Int) {
+        val resultIntent = Intent().apply {
+            putExtra("SCORE", score)
+        }
         activity?.setResult(Activity.RESULT_OK, resultIntent)
-        activity?.finish()  // Finish the activity after sending the result
+        activity?.finish()
     }
 
     override fun onTimerEnd() {
         displayFinalScore()
     }
 }
-

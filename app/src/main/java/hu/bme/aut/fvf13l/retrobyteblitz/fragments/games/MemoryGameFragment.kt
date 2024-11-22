@@ -18,6 +18,8 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import hu.bme.aut.fvf13l.retrobyteblitz.databinding.FragmentMemoryGameBinding
+import hu.bme.aut.fvf13l.retrobyteblitz.utility.GameDifficultyUtils
+import hu.bme.aut.fvf13l.retrobyteblitz.utility.ScoreUtility
 import kotlin.random.Random
 
 class MemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
@@ -150,20 +152,32 @@ class MemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
         binding.userSequenceContainer.addView(view)
     }
 
-    override fun onTimerEnd() {
+    private fun displayFinalScore() {
+        val gameName = requireActivity().intent.getStringExtra("GAME_NAME") ?: "Default Game"
+        val score = GameDifficultyUtils.calculateScore(gameName, successfulRounds)
+
+        val scoreLayout = ScoreUtility.createScoreLayout(requireContext(), score) { _ ->
+        }
+
         AlertDialog.Builder(requireContext())
             .setTitle("Game Over")
-            .setMessage("Score: $successfulRounds/$totalRounds")
-            .setPositiveButton("OK") { _, _ -> sendResultAndFinish() }
-            .setOnDismissListener { sendResultAndFinish() }
+            .setView(scoreLayout)
+            .setMessage("You solved $successfulRounds out of $totalRounds rounds!")
+            .setPositiveButton("OK") { _, _ -> sendResultAndFinish(score) }
+            .setOnDismissListener { activity?.finish() }
             .show()
+
     }
 
-    private fun sendResultAndFinish() {
+    private fun sendResultAndFinish(score: Int) {
         val resultIntent = Intent().apply {
-            putExtra("SUCCESSFUL_ROUNDS", successfulRounds)
+            putExtra("SCORE", score)
         }
         activity?.setResult(Activity.RESULT_OK, resultIntent)
         activity?.finish()
+    }
+
+    override fun onTimerEnd() {
+        displayFinalScore()
     }
 }

@@ -18,6 +18,8 @@ import hu.bme.aut.fvf13l.retrobyteblitz.R
 import hu.bme.aut.fvf13l.retrobyteblitz.databinding.FragmentSlidingGameBinding
 import android.view.ViewTreeObserver
 import androidx.appcompat.app.AlertDialog
+import hu.bme.aut.fvf13l.retrobyteblitz.utility.GameDifficultyUtils
+import hu.bme.aut.fvf13l.retrobyteblitz.utility.ScoreUtility
 
 class SlidingGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
 
@@ -201,20 +203,32 @@ class SlidingGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener 
         initializeGame()
     }
 
-    override fun onTimerEnd() {
+    private fun displayFinalScore() {
+        val gameName = requireActivity().intent.getStringExtra("GAME_NAME") ?: "Default Game"
+        val score = GameDifficultyUtils.calculateScore(gameName, solvedGames)
+
+        val scoreLayout = ScoreUtility.createScoreLayout(requireContext(), score) { _ ->
+        }
+
         AlertDialog.Builder(requireContext())
             .setTitle("Game Over")
-            .setMessage("Score: $solvedGames")
-            .setPositiveButton("OK") { _, _ -> sendResultAndFinish() }
-            .setOnDismissListener { sendResultAndFinish() }
+            .setView(scoreLayout)
+            .setMessage("You solved $solvedGames rounds!")
+            .setPositiveButton("OK") { _, _ -> sendResultAndFinish(score) }
+            .setOnDismissListener { activity?.finish() }
             .show()
+
     }
 
-    private fun sendResultAndFinish() {
+    private fun sendResultAndFinish(score: Int) {
         val resultIntent = Intent().apply {
-            putExtra("SUCCESSFUL_ROUNDS", solvedGames)
+            putExtra("SCORE", score)
         }
         activity?.setResult(Activity.RESULT_OK, resultIntent)
         activity?.finish()
+    }
+
+    override fun onTimerEnd() {
+        displayFinalScore()
     }
 }

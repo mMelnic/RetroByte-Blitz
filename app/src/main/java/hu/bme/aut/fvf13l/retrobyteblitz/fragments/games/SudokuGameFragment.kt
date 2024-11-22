@@ -22,6 +22,8 @@ import androidx.lifecycle.lifecycleScope
 import hu.bme.aut.fvf13l.retrobyteblitz.MainActivity
 import hu.bme.aut.fvf13l.retrobyteblitz.data.api.RetrofitClient
 import hu.bme.aut.fvf13l.retrobyteblitz.databinding.FragmentSudokuGameBinding
+import hu.bme.aut.fvf13l.retrobyteblitz.utility.GameDifficultyUtils
+import hu.bme.aut.fvf13l.retrobyteblitz.utility.ScoreUtility
 import kotlinx.coroutines.launch
 
 
@@ -168,17 +170,25 @@ class SudokuGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
     }
 
     private fun displayFinalScore() {
+        val gameName = requireActivity().intent.getStringExtra("GAME_NAME") ?: "Default Game"
+        val score = GameDifficultyUtils.calculateScore(gameName, successfulRounds)
+
+        val scoreLayout = ScoreUtility.createScoreLayout(requireContext(), score) { _ ->
+        }
+
         AlertDialog.Builder(requireContext())
             .setTitle("Game Over")
-            .setMessage("Time is up! Solved rounds: $successfulRounds")
-            .setPositiveButton("OK") { _, _ -> sendResultAndFinish() }
+            .setView(scoreLayout)
+            .setMessage("You solved $successfulRounds rounds!")
+            .setPositiveButton("OK") { _, _ -> sendResultAndFinish(score) }
             .setOnDismissListener { activity?.finish() }
             .show()
+
     }
 
-    private fun sendResultAndFinish() {
+    private fun sendResultAndFinish(score: Int) {
         val resultIntent = Intent().apply {
-            putExtra("SUCCESSFUL_ROUNDS", successfulRounds)
+            putExtra("SCORE", score)
         }
         activity?.setResult(Activity.RESULT_OK, resultIntent)
         activity?.finish()
