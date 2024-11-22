@@ -29,8 +29,7 @@ import kotlinx.coroutines.launch
 
 class SudokuGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
 
-    private var _binding: FragmentSudokuGameBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentSudokuGameBinding
     private lateinit var solutionGrid: List<List<Int>>
     private lateinit var currentGrid: Array<Array<EditText>>
     private var successfulRounds = 0
@@ -44,7 +43,7 @@ class SudokuGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentSudokuGameBinding.inflate(inflater, container, false)
+        binding = FragmentSudokuGameBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -196,11 +195,6 @@ class SudokuGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
 
     override fun onTimerEnd() {
         displayFinalScore()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
 
