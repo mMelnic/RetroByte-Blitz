@@ -2,6 +2,8 @@ package hu.bme.aut.fvf13l.retrobyteblitz.fragments.games
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -12,11 +14,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import hu.bme.aut.fvf13l.retrobyteblitz.databinding.FragmentRomanNumeralsGameBinding
+import hu.bme.aut.fvf13l.retrobyteblitz.utility.GameDifficultyUtils
+import hu.bme.aut.fvf13l.retrobyteblitz.utility.ScoreUtility
 import kotlin.random.Random
 
-class RomanNumeralsGameFragment : Fragment() {
+class RomanNumeralsGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
 
     private lateinit var binding: FragmentRomanNumeralsGameBinding
 
@@ -26,6 +31,7 @@ class RomanNumeralsGameFragment : Fragment() {
 
     private var matchedPairs = 0
     private var round = 1
+    private var successfulRounds = 0
     private val romanArabicPairs = mutableMapOf<TextView, TextView>()
 
     private fun generateRomanNumeral(level: Int, usedValues: MutableSet<Int>): Pair<String, Int> {
@@ -82,6 +88,7 @@ class RomanNumeralsGameFragment : Fragment() {
         binding.gameContainer.removeAllViews()
         movingViews.clear()
         romanArabicPairs.clear()
+        binding.scoreTextView.text = "Round: $round"
         matchedPairs = 0
 
         val pairsCount = 1 + round
@@ -172,6 +179,7 @@ class RomanNumeralsGameFragment : Fragment() {
                 matchedPairs++
                 if (matchedPairs == romanArabicPairs.size / 2) {
                     round++
+                    successfulRounds++
                     handler.postDelayed({ startNewRound() }, 1000)
                 }
             } else {
@@ -208,6 +216,34 @@ class RomanNumeralsGameFragment : Fragment() {
                 start()
             }
         }
+    }
+
+    private fun displayFinalScore() {
+        val gameName = requireActivity().intent.getStringExtra("GAME_NAME") ?: "Default Game"
+        val score = GameDifficultyUtils.calculateScore(gameName, successfulRounds)
+
+        val scoreLayout = ScoreUtility.createScoreLayout(requireContext(), score) { _ ->
+        }
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Game Over")
+            .setView(scoreLayout)
+            .setMessage("You solved $successfulRounds rounds!")
+            .setPositiveButton("OK") { _, _ -> sendResultAndFinish(score) }
+            .setOnDismissListener { activity?.finish() }
+            .show()
+    }
+
+    private fun sendResultAndFinish(score: Int) {
+        val resultIntent = Intent().apply {
+            putExtra("SCORE", score)
+        }
+        activity?.setResult(Activity.RESULT_OK, resultIntent)
+        activity?.finish()
+    }
+
+    override fun onTimerEnd() {
+        displayFinalScore()
     }
 }
 
