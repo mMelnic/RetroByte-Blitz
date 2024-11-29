@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import hu.bme.aut.fvf13l.retrobyteblitz.MainActivity
 import hu.bme.aut.fvf13l.retrobyteblitz.databinding.FragmentBottomBinding
+import hu.bme.aut.fvf13l.retrobyteblitz.model.StatisticsActivity
 
 class BottomFragment : Fragment() {
 
@@ -21,6 +22,9 @@ class BottomFragment : Fragment() {
         binding.buttonNav1.setOnClickListener {
             val intent = Intent(activity, MainActivity::class.java)
             startActivity(intent)
+        }
+        binding.buttonNav2.setOnClickListener {
+            startActivity(Intent(activity, StatisticsActivity::class.java))
         }
         return binding.root
     }
