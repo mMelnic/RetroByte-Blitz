@@ -6,11 +6,14 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import hu.bme.aut.fvf13l.retrobyteblitz.model.DailyExerciseProgress
 import hu.bme.aut.fvf13l.retrobyteblitz.model.DailyExerciseProgressDao
+import hu.bme.aut.fvf13l.retrobyteblitz.model.DailyExerciseScore
+import hu.bme.aut.fvf13l.retrobyteblitz.model.DailyExerciseScoreDao
 
-@Database(entities = [User::class, DailyExerciseProgress::class], version = 2)
+@Database(entities = [User::class, DailyExerciseProgress::class, DailyExerciseScore::class], version = 3)
 abstract class UserDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun dailyExerciseProgressDao(): DailyExerciseProgressDao
+    abstract fun dailyExerciseScoreDao(): DailyExerciseScoreDao
 
     companion object {
         @Volatile
