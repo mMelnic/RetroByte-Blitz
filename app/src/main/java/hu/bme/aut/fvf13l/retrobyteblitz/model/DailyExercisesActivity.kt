@@ -29,65 +29,55 @@ class DailyExercisesActivity : AppCompatActivity() {
 
     private var currentGameIndex = 0
     private lateinit var selectedGames: List<String>
+    private lateinit var currentDate: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Initialize View Binding
         binding = ActivityDailyExercisesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Display today's date
-        val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+        currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
         binding.dateTextView.text = getString(R.string.today_date, currentDate)
 
-        // Load progress from the database
         loadProgress { progress ->
             if (progress == null || isNewDay(progress.date, currentDate)) {
-                setupNewDay(currentDate)  // Initialize a new session
+                setupNewDay()
             } else {
-                restoreOngoingSession(progress)  // Resume the saved progress
+                restoreOngoingSession(progress)
             }
         }
     }
 
-    private fun setupNewDay(currentDate: String) {
-        // Clear previous progress
+    private fun setupNewDay() {
         clearProgress()
 
-        // Randomly select one game from each category
         selectedGames = categoryGames.keys.map { category ->
             val gamesInCategory = categoryGames[category] ?: emptyList()
             gamesInCategory.random()
         }
-
-        // Display the selected games
         binding.gamesTextView.text = selectedGames.joinToString("\n")
 
-        // Enable the start button
         binding.startButton.isEnabled = true
         binding.startButton.text = getString(R.string.start_button_text)
         binding.startButton.setOnClickListener {
             currentGameIndex = 0
             startGamesSequentially()
-
-            // Save the initial progress
             saveProgress()
         }
     }
 
 
     private fun restoreOngoingSession(progress: DailyExerciseProgress) {
-        currentGameIndex = progress.currentGameIndex  // Resume from the last game index
-        selectedGames = progress.selectedGames.split(",")  // Convert CSV back to a list
+        currentGameIndex = progress.currentGameIndex
+        selectedGames = progress.selectedGames.split(",")
 
-        // Display the selected games
         binding.gamesTextView.text = selectedGames.joinToString("\n")
 
         // Enable the start button to resume
         binding.startButton.isEnabled = true
         binding.startButton.setOnClickListener {
-            startGamesSequentially()  // Resume the game sequence
+            startGamesSequentially()
         }
     }
 
@@ -110,7 +100,6 @@ class DailyExercisesActivity : AppCompatActivity() {
                 launchGame(nextGame)
             }
         } else {
-            // All games completed
             Toast.makeText(this, R.string.daily_exercises_completed, Toast.LENGTH_SHORT).show()
             binding.startButton.isEnabled = false
             binding.startButton.text = getString(R.string.completed_today)
@@ -146,7 +135,7 @@ class DailyExercisesActivity : AppCompatActivity() {
     private fun launchGame(gameName: String) {
         val intent = Intent(this, GameActivity::class.java).apply {
             putExtra("GAME_NAME", gameName)
-            putExtra("TIME_LIMIT", 60000L)  // Adjust the time limit as needed
+            putExtra("TIME_LIMIT", 60000L)
         }
         startActivityForResult(intent, GAME_REQUEST_CODE)
     }
@@ -155,40 +144,51 @@ class DailyExercisesActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == GAME_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            // After a game is finished, move to the next game
+            val score = data?.getIntExtra("SCORE", 0) ?: 0
+            val currentGame = selectedGames[currentGameIndex]
+
+            // Find the category of the current game
+            val category = categoryGames.entries.firstOrNull { (_, games) ->
+                games.contains(currentGame)
+            }?.key ?: "Unknown" // Default to "Unknown" if not found (shouldn't happen)
+
+            // Save the score and category to the database
+            val db = UserDatabase.getDatabase(this)
+            CoroutineScope(Dispatchers.IO).launch {
+                db.dailyExerciseScoreDao().saveScore(
+                    DailyExerciseScore(
+                        date = currentDate,
+                        category = category, // Use the found category
+                        score = score
+                    )
+                )
+            }
+
             currentGameIndex++
             saveProgress()
-            runNextGame()  // Proceed to the next game
+            runNextGame()
         }
     }
+
+
 
     private fun isNewDay(savedDate: String, currentDate: String): Boolean {
         return savedDate != currentDate
     }
 
-    // Save the current date in SharedPreferences
-    private fun saveLastCompletedDate() {
-        val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
-        val editor = sharedPref.edit()
-        val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
-        editor.putString("last_completed_date", currentDate)
-        editor.apply()
-    }
-
     private fun saveProgress() {
-        val db = UserDatabase.getDatabase(this)  // Get the database instance
+        val db = UserDatabase.getDatabase(this)
         val progressDao = db.dailyExerciseProgressDao()
-        val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+        // val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
         val progress = DailyExerciseProgress(
             id = 1,
             currentGameIndex = currentGameIndex,
-            selectedGames = selectedGames.joinToString(","), // Store as CSV or JSON
+            selectedGames = selectedGames.joinToString(","),
             date = currentDate
             //totalScore = 0 // TODO logic for score
         )
 
-        // Save progress using a background thread
         CoroutineScope(Dispatchers.IO).launch {
             progressDao.saveProgress(progress)
         }
@@ -199,9 +199,9 @@ class DailyExercisesActivity : AppCompatActivity() {
         val progressDao = db.dailyExerciseProgressDao()
 
         CoroutineScope(Dispatchers.IO).launch {
-            val progress = progressDao.getProgress() // Fetch the progress
+            val progress = progressDao.getProgress()
             withContext(Dispatchers.Main) {
-                onLoaded(progress) // Return the progress to the caller
+                onLoaded(progress)
             }
         }
     }
