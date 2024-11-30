@@ -56,7 +56,6 @@ class StatisticsActivity : AppCompatActivity() {
         val lineData = LineData(lineDataSets as List<ILineDataSet>?)
         binding.progressLineChart.data = lineData
 
-        // Adjust the scale
         binding.progressLineChart.xAxis.apply {
             axisMinimum = 0f
             axisMaximum = 10f
@@ -83,11 +82,15 @@ class StatisticsActivity : AppCompatActivity() {
         val database = UserDatabase.getDatabase(this)
 
         CoroutineScope(Dispatchers.IO).launch {
-            val results = database.dailyExerciseScoreDao().getAllScores()
-            results.groupBy { it.category }.forEach { (category, scores) ->
-                val entries = scores.mapIndexed { index, score ->
-                    Entry(index.toFloat(), score.score.toFloat())
-                }
+            val results = database.dailyExerciseScoreDao().getCategoryCompletionCounts()
+            val validDays = results.filter { it.categoryCount == 4 }.map { it.date }
+
+            val scores = database.dailyExerciseScoreDao().getAllScores()
+
+            scores.groupBy { it.category }.forEach { (category, scores) ->
+                val entries = scores
+                    .filter { it.date in validDays }
+                    .mapIndexed { index, score -> Entry(index.toFloat(), score.score.toFloat()) }
                 categoryScores[category] = entries.toMutableList()
             }
 
@@ -95,7 +98,6 @@ class StatisticsActivity : AppCompatActivity() {
                 setupLineChart(categoryScores)
             }
         }
-
         return categoryScores
     }
 
