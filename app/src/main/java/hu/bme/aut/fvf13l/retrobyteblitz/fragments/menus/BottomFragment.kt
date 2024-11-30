@@ -5,10 +5,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import hu.bme.aut.fvf13l.retrobyteblitz.MainActivity
+import hu.bme.aut.fvf13l.retrobyteblitz.R
+import hu.bme.aut.fvf13l.retrobyteblitz.adapter.LeaderboardAdapter
+import hu.bme.aut.fvf13l.retrobyteblitz.adapter.LeaderboardEntry
+import hu.bme.aut.fvf13l.retrobyteblitz.databinding.DialogLeaderboardBinding
 import hu.bme.aut.fvf13l.retrobyteblitz.databinding.FragmentBottomBinding
 import hu.bme.aut.fvf13l.retrobyteblitz.model.StatisticsActivity
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class BottomFragment : Fragment() {
 
@@ -26,9 +39,38 @@ class BottomFragment : Fragment() {
         binding.buttonNav2.setOnClickListener {
             startActivity(Intent(activity, StatisticsActivity::class.java))
         }
+
+        binding.buttonNav3.setOnClickListener {
+            showLeaderboardDialog()
+        }
         return binding.root
     }
 
-    // To implement onClick listeners for navigation buttons
+    private fun showLeaderboardDialog() {
+        val dialogBinding = DialogLeaderboardBinding.inflate(layoutInflater)
 
+        val adapter = LeaderboardAdapter()
+        dialogBinding.leaderboardRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        dialogBinding.leaderboardRecyclerView.adapter = adapter
+
+        val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+        dialogBinding.dateTextView.text = getString(R.string.leaderboard_date, currentDate)
+
+        val database = Firebase.database.reference
+        database.child("leaderboard/$currentDate").get().addOnSuccessListener { snapshot ->
+            val leaderboard = snapshot.children.mapNotNull {
+                val username = it.key ?: return@mapNotNull null
+                val score = (it.value as? Long) ?: return@mapNotNull null
+                LeaderboardEntry(username, score)
+            }.sortedByDescending { it.score }
+            adapter.submitList(leaderboard)
+        }
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogBinding.root)
+            .setPositiveButton("Close", null)
+            .create()
+
+        dialog.show()
+    }
 }

@@ -6,9 +6,13 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import hu.bme.aut.fvf13l.retrobyteblitz.R
 import hu.bme.aut.fvf13l.retrobyteblitz.auth.UserDatabase
 import hu.bme.aut.fvf13l.retrobyteblitz.databinding.ActivityDailyExercisesBinding
+import hu.bme.aut.fvf13l.retrobyteblitz.utility.SessionManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,6 +23,7 @@ import java.util.Locale
 
 class DailyExercisesActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDailyExercisesBinding
+    private lateinit var database: DatabaseReference
 
     private val categoryGames = mapOf(
         "Logic" to listOf("Number Of", "Sudoku", "Slider"),
@@ -33,6 +38,7 @@ class DailyExercisesActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        database = Firebase.database.reference
 
         binding = ActivityDailyExercisesBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -74,13 +80,11 @@ class DailyExercisesActivity : AppCompatActivity() {
 
         binding.gamesTextView.text = selectedGames.joinToString("\n")
 
-        // Enable the start button to resume
         binding.startButton.isEnabled = true
         binding.startButton.setOnClickListener {
             startGamesSequentially()
         }
     }
-
 
     override fun onPause() {
         super.onPause()
@@ -146,22 +150,26 @@ class DailyExercisesActivity : AppCompatActivity() {
         if (requestCode == GAME_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val score = data?.getIntExtra("SCORE", 0) ?: 0
             val currentGame = selectedGames[currentGameIndex]
+            val username = SessionManager.getUsername(this)
 
-            // Find the category of the current game
             val category = categoryGames.entries.firstOrNull { (_, games) ->
                 games.contains(currentGame)
-            }?.key ?: "Unknown" // Default to "Unknown" if not found (shouldn't happen)
+            }?.key ?: "Unknown"
 
-            // Save the score and category to the database
             val db = UserDatabase.getDatabase(this)
             CoroutineScope(Dispatchers.IO).launch {
                 db.dailyExerciseScoreDao().saveScore(
                     DailyExerciseScore(
                         date = currentDate,
-                        category = category, // Use the found category
+                        category = category,
                         score = score
                     )
                 )
+            }
+            val dailyPath = "leaderboard/$currentDate/$username"
+            database.child(dailyPath).get().addOnSuccessListener {
+                val existingScore = it.value as? Long ?: 0
+                database.child(dailyPath).setValue(existingScore + score)
             }
 
             currentGameIndex++
@@ -170,8 +178,6 @@ class DailyExercisesActivity : AppCompatActivity() {
         }
     }
 
-
-
     private fun isNewDay(savedDate: String, currentDate: String): Boolean {
         return savedDate != currentDate
     }
@@ -179,14 +185,12 @@ class DailyExercisesActivity : AppCompatActivity() {
     private fun saveProgress() {
         val db = UserDatabase.getDatabase(this)
         val progressDao = db.dailyExerciseProgressDao()
-        // val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
         val progress = DailyExerciseProgress(
             id = 1,
             currentGameIndex = currentGameIndex,
             selectedGames = selectedGames.joinToString(","),
             date = currentDate
-            //totalScore = 0 // TODO logic for score
         )
 
         CoroutineScope(Dispatchers.IO).launch {
