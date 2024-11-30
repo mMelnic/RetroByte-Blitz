@@ -1,6 +1,7 @@
 package hu.bme.aut.fvf13l.retrobyteblitz.model
 
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.applandeo.materialcalendarview.CalendarDay
@@ -44,27 +45,37 @@ class StatisticsActivity : AppCompatActivity() {
     private fun setupLineChart(progressData: Map<String, List<Entry>>) {
         val lineDataSets = ArrayList<LineDataSet>()
 
+        var maxScore = 0f
+
         for ((category, entries) in progressData) {
             val lineDataSet = LineDataSet(entries, category)
             lineDataSet.color = categoryColors[category] ?: Color.BLACK
             lineDataSet.setCircleColor(lineDataSet.color)
             lineDataSet.circleRadius = 7f
             lineDataSet.setDrawCircleHole(false)
+            lineDataSet.lineWidth = 3f
             lineDataSets.add(lineDataSet)
-        }
 
+            val categoryMaxScore = entries.maxOfOrNull { it.y } ?: 0f
+            maxScore = maxOf(maxScore, categoryMaxScore)
+        }
         val lineData = LineData(lineDataSets as List<ILineDataSet>?)
         binding.progressLineChart.data = lineData
 
         binding.progressLineChart.xAxis.apply {
             axisMinimum = 0f
             axisMaximum = 10f
-            setLabelCount(5, true)
+            setLabelCount(5, false)
+            gridLineWidth = 1f
+            axisLineWidth = 2f
         }
 
         binding.progressLineChart.axisLeft.apply {
             axisMinimum = 0f
-            axisMaximum = 5000f
+            axisMaximum = maxScore * 1.1f
+            gridLineWidth = 1f
+            axisLineWidth = 2f
+            typeface = Typeface.DEFAULT_BOLD
         }
 
         binding.progressLineChart.axisRight.isEnabled = false
@@ -73,6 +84,11 @@ class StatisticsActivity : AppCompatActivity() {
         binding.progressLineChart.isScaleXEnabled = true
         binding.progressLineChart.isScaleYEnabled = true
         binding.progressLineChart.setVisibleXRangeMaximum(5f)
+
+        binding.progressLineChart.legend.apply {
+            textSize = 14f
+            typeface = Typeface.DEFAULT_BOLD
+        }
 
         binding.progressLineChart.invalidate()
     }
