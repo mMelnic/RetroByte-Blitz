@@ -28,7 +28,6 @@ object SessionManager {
         }
     }
 
-    // Check if user is logged in by checking if username exists
     fun isLoggedIn(context: Context): Boolean {
         val masterKey = MasterKey.Builder(context)
             .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
@@ -45,7 +44,22 @@ object SessionManager {
         return sharedPreferences.contains(USERNAME_KEY)
     }
 
-    // Clear session at logout (implement logout feature later in the settings view)
+    fun getUsername(context: Context): String? {
+        val masterKey = MasterKey.Builder(context)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+
+        val sharedPreferences = EncryptedSharedPreferences.create(
+            context,
+            PREF_NAME,
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+
+        return sharedPreferences.getString(USERNAME_KEY, null)
+    }
+
     fun clearSession(context: Context) {
         val masterKey = MasterKey.Builder(context)
             .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
