@@ -56,23 +56,39 @@ class DailyExercisesActivity : AppCompatActivity() {
     }
 
     private fun setupNewDay() {
-        clearProgress()
+        val dateKey = currentDate
 
-        selectedGames = categoryGames.keys.map { category ->
-            val gamesInCategory = categoryGames[category] ?: emptyList()
-            gamesInCategory.random()
-        }
-        binding.gamesTextView.text = selectedGames.joinToString("\n")
+        database.child("daily_games").child(dateKey).get().addOnSuccessListener { snapshot ->
+            if (snapshot.exists()) {
+                val storedGames = snapshot.child("games").value as? String
+                if (storedGames != null) {
+                    selectedGames = storedGames.split(",")
+                    binding.gamesTextView.text = selectedGames.joinToString("\n")
+                }
+            } else {
+                selectedGames = categoryGames.keys.map { category ->
+                    val gamesInCategory = categoryGames[category] ?: emptyList()
+                    gamesInCategory.random()
+                }
 
-        binding.startButton.isEnabled = true
-        binding.startButton.text = getString(R.string.start_button_text)
-        binding.startButton.setOnClickListener {
-            currentGameIndex = 0
-            startGamesSequentially()
-            saveProgress()
+                database.child("daily_games").child(dateKey).setValue(
+                    mapOf("games" to selectedGames.joinToString(","))
+                )
+
+                binding.gamesTextView.text = selectedGames.joinToString("\n")
+            }
+
+            binding.startButton.isEnabled = true
+            binding.startButton.text = getString(R.string.start_button_text)
+            binding.startButton.setOnClickListener {
+                currentGameIndex = 0
+                startGamesSequentially()
+                saveProgress()
+            }
+        }.addOnFailureListener {
+            Toast.makeText(this, R.string.error_fetching_games, Toast.LENGTH_SHORT).show()
         }
     }
-
 
     private fun restoreOngoingSession(progress: DailyExerciseProgress) {
         currentGameIndex = progress.currentGameIndex
