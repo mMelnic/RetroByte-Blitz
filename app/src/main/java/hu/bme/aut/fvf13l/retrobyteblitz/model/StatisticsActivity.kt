@@ -3,16 +3,21 @@ package hu.bme.aut.fvf13l.retrobyteblitz.model
 import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.applandeo.materialcalendarview.CalendarDay
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import hu.bme.aut.fvf13l.retrobyteblitz.R
 import hu.bme.aut.fvf13l.retrobyteblitz.auth.UserDatabase
 import hu.bme.aut.fvf13l.retrobyteblitz.databinding.ActivityStatisticsBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class StatisticsActivity : AppCompatActivity() {
 
@@ -33,6 +38,7 @@ class StatisticsActivity : AppCompatActivity() {
         val progressData = loadProgressData()
 
         setupLineChart(progressData)
+        fetchCategoryCompletionEvents()
     }
 
     private fun setupLineChart(progressData: Map<String, List<Entry>>) {
@@ -72,8 +78,6 @@ class StatisticsActivity : AppCompatActivity() {
         binding.progressLineChart.invalidate()
     }
 
-
-
     private fun loadProgressData(): Map<String, List<Entry>> {
         val categoryScores = mutableMapOf<String, MutableList<Entry>>()
         val database = UserDatabase.getDatabase(this)
@@ -93,5 +97,46 @@ class StatisticsActivity : AppCompatActivity() {
         }
 
         return categoryScores
+    }
+
+    private fun fetchCategoryCompletionEvents() {
+        val database = UserDatabase.getDatabase(this)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val scores = database.dailyExerciseScoreDao().getAllScores()
+            val categoryCompletionMap = scores.groupBy { score ->
+                val calendar = Calendar.getInstance()
+                calendar.time = dateFormat.parse(score.date)!!
+                calendar
+            }.mapValues { (_, dailyScores) ->
+                dailyScores.map { it.category }.distinct().count()
+            }
+
+            val calendarDays = mutableListOf<CalendarDay>()
+            categoryCompletionMap.forEach { (calendar, completedCategories) ->
+                val colorRes = when (completedCategories) {
+                    1 -> R.color.red_pastel
+                    2 -> R.color.yellow_pastel
+                    3 -> R.color.blue_pastel
+                    4 -> R.color.green_pastel
+                    else -> R.color.white
+                }
+
+                val calendarDay = CalendarDay(calendar).apply {
+                    labelColor = R.color.purple_700
+                    backgroundResource = colorRes
+                }
+                calendarDays.add(calendarDay)
+            }
+
+            withContext(Dispatchers.Main) {
+                applyCalendarEvents(calendarDays)
+            }
+        }
+    }
+
+    private fun applyCalendarEvents(events: List<CalendarDay>) {
+        binding.exerciseCalendar.setCalendarDays(events)
     }
 }

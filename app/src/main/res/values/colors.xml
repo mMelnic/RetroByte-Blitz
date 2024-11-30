@@ -13,4 +13,8 @@
     <color name="blue_color">#0D47A1</color>
     <color name="yellow_color">#FFEB3B</color>
     <color name="orange_color">#FFA500</color>
+    <color name="red_pastel">#FFCDD2</color>
+    <color name="green_pastel">#FFC8E6C9</color>
+    <color name="blue_pastel">#FFBBDEFB</color>
+    <color name="yellow_pastel">#FFFFF9C4</color>
 </resources>
