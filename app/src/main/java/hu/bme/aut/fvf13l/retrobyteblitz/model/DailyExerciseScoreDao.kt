@@ -12,4 +12,12 @@ interface DailyExerciseScoreDao {
 
     @Query("SELECT * FROM daily_exercise_scores")
     suspend fun getAllScores(): List<DailyExerciseScore>
+
+    @Query("""
+        SELECT date, COUNT(DISTINCT category) as categoryCount 
+        FROM daily_exercise_scores 
+        GROUP BY date
+    """)
+    suspend fun getCategoryCompletionCounts(): List<DateCategoryCount>
+
 }

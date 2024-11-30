@@ -104,18 +104,14 @@ class StatisticsActivity : AppCompatActivity() {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
         CoroutineScope(Dispatchers.IO).launch {
-            val scores = database.dailyExerciseScoreDao().getAllScores()
-            val categoryCompletionMap = scores.groupBy { score ->
-                val calendar = Calendar.getInstance()
-                calendar.time = dateFormat.parse(score.date)!!
-                calendar
-            }.mapValues { (_, dailyScores) ->
-                dailyScores.map { it.category }.distinct().count()
-            }
+            val categoryCompletionCount = database.dailyExerciseScoreDao().getCategoryCompletionCounts()
 
             val calendarDays = mutableListOf<CalendarDay>()
-            categoryCompletionMap.forEach { (calendar, completedCategories) ->
-                val colorRes = when (completedCategories) {
+            categoryCompletionCount.forEach { dateCategoryCount ->
+                val calendar = Calendar.getInstance()
+                calendar.time = dateFormat.parse(dateCategoryCount.date)!!
+
+                val colorRes = when (dateCategoryCount.categoryCount) {
                     1 -> R.color.red_pastel
                     2 -> R.color.yellow_pastel
                     3 -> R.color.blue_pastel
