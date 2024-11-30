@@ -14,10 +14,10 @@ class AuthViewModel(private val repository: UserRepository) : ViewModel() {
         }
     }
 
-    fun login(username: String, password: String, onResult: (Boolean) -> Unit) {
+    fun login(username: String, password: String, onResult: (Boolean, String?) -> Unit) {
         viewModelScope.launch {
-            val success = repository.loginUser(username, password)
-            onResult(success)
+            val (success, userId) = repository.loginUser(username, password)
+            onResult(success, userId)
         }
     }
 }

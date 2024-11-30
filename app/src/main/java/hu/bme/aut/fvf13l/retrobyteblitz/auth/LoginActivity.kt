@@ -38,10 +38,9 @@ class LoginActivity : AppCompatActivity() {
             val password = binding.passwordEditText.text.toString()
 
             if (username.isNotBlank() && password.isNotBlank()) {
-                authViewModel.login(username, password) { success ->
-                    if (success) {
-                        // Save session and navigate to the main screen on successful login
-                        SessionManager.saveUserSession(this, username)
+                authViewModel.login(username, password) { success, userId ->
+                    if (success && userId != null) {
+                        SessionManager.saveUserSession(this, username, userId)
                         startActivity(Intent(this, MainActivity::class.java))
                         finish()
                     } else {
@@ -61,7 +60,6 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Automatically navigate to main screen if user is already logged in
         if (SessionManager.isLoggedIn(this)) {
             startActivity(Intent(this, MainActivity::class.java))
             finish()

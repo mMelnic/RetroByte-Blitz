@@ -9,7 +9,7 @@ import hu.bme.aut.fvf13l.retrobyteblitz.model.DailyExerciseProgressDao
 import hu.bme.aut.fvf13l.retrobyteblitz.model.DailyExerciseScore
 import hu.bme.aut.fvf13l.retrobyteblitz.model.DailyExerciseScoreDao
 
-@Database(entities = [User::class, DailyExerciseProgress::class, DailyExerciseScore::class], version = 3)
+@Database(entities = [User::class, DailyExerciseProgress::class, DailyExerciseScore::class], version = 4)
 abstract class UserDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun dailyExerciseProgressDao(): DailyExerciseProgressDao
@@ -26,7 +26,7 @@ abstract class UserDatabase : RoomDatabase() {
                     UserDatabase::class.java,
                     "retrobyte_db"
                 )
-                    .fallbackToDestructiveMigration() // Handle version changes
+                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance

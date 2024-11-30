@@ -1,6 +1,7 @@
 package hu.bme.aut.fvf13l.retrobyteblitz.auth
 
 import hu.bme.aut.fvf13l.retrobyteblitz.utility.SecurityUtil
+import java.util.UUID
 
 class UserRepository(private val userDao: UserDao) {
 
@@ -10,13 +11,19 @@ class UserRepository(private val userDao: UserDao) {
             return false
         }
         val hashedPassword = SecurityUtil.hashPassword(password)
-        val user = User(username = username, hashedPassword = hashedPassword)
+        val userId = UUID.randomUUID().toString()
+        val user = User(username = username, userId = userId, hashedPassword = hashedPassword)
         userDao.insertUser(user)
         return true
     }
 
-    suspend fun loginUser(username: String, password: String): Boolean {
-        val user = userDao.getUserByUsername(username) ?: return false
-        return SecurityUtil.verifyPassword(password, user.hashedPassword)
+    suspend fun loginUser(username: String, password: String): Pair<Boolean, String?> {
+        val user = userDao.getUserByUsername(username) ?: return Pair(false, null)
+        return if (SecurityUtil.verifyPassword(password, user.hashedPassword)) {
+            Pair(true, user.userId)
+        } else {
+            Pair(false, null)
+        }
     }
+
 }

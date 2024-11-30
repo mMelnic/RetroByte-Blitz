@@ -5,11 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import hu.bme.aut.fvf13l.retrobyteblitz.MainActivity
@@ -58,12 +57,16 @@ class BottomFragment : Fragment() {
 
         val database = Firebase.database.reference
         database.child("leaderboard/$currentDate").get().addOnSuccessListener { snapshot ->
-            val leaderboard = snapshot.children.mapNotNull {
-                val username = it.key ?: return@mapNotNull null
-                val score = (it.value as? Long) ?: return@mapNotNull null
+            val leaderboard = snapshot.children.mapNotNull { entry ->
+                val score = entry.child("score").getValue(Long::class.java) ?: return@mapNotNull null
+                val username = entry.child("username").getValue(String::class.java) ?: "Unknown"
+
                 LeaderboardEntry(username, score)
             }.sortedByDescending { it.score }
+
             adapter.submitList(leaderboard)
+        }.addOnFailureListener {
+            Toast.makeText(requireContext(), "Failed to load leaderboard", Toast.LENGTH_SHORT).show()
         }
 
         val dialog = AlertDialog.Builder(requireContext())

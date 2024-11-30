@@ -182,15 +182,39 @@ class DailyExercisesActivity : AppCompatActivity() {
                     )
                 )
             }
-            val dailyPath = "leaderboard/$currentDate/$username"
-            database.child(dailyPath).get().addOnSuccessListener {
-                val existingScore = it.value as? Long ?: 0
-                database.child(dailyPath).setValue(existingScore + score)
-            }
+            updateLeaderboard(score)
 
             currentGameIndex++
             saveProgress()
             runNextGame()
+        }
+    }
+
+    private fun updateLeaderboard(score: Int) {
+        val userId = SessionManager.getUserId(this)
+        val username = SessionManager.getUsername(this)
+
+        if (userId == null || username == null) {
+            Toast.makeText(this, "User session invalid. Please log in again.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val dailyPath = "leaderboard/$currentDate/$userId"
+
+        database.child(dailyPath).get().addOnSuccessListener { snapshot ->
+            val existingData = snapshot.value as? Map<*, *>
+            val existingScore = (existingData?.get("score") as? Long) ?: 0
+            val updatedScore = existingScore + score
+
+            val updatedData = mapOf(
+                "username" to username,
+                "score" to updatedScore
+            )
+
+            database.child(dailyPath).setValue(updatedData).addOnSuccessListener {
+                // Success
+            }
+        }.addOnFailureListener {
+            Toast.makeText(this, "Failed to update leaderboard. Please try again.", Toast.LENGTH_SHORT).show()
         }
     }
 

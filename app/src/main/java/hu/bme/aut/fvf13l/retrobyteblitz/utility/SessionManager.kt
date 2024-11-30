@@ -8,8 +8,9 @@ object SessionManager {
 
     private const val PREF_NAME = "user_session"
     private const val USERNAME_KEY = "username"
+    private const val USER_ID_KEY = "user_id"
 
-    fun saveUserSession(context: Context, username: String) {
+    fun saveUserSession(context: Context, username: String, userId: String) {
         val masterKey = MasterKey.Builder(context)
             .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
             .build()
@@ -24,6 +25,7 @@ object SessionManager {
 
         with(sharedPreferences.edit()) {
             putString(USERNAME_KEY, username)
+            putString(USER_ID_KEY, userId)
             apply()
         }
     }
@@ -58,6 +60,22 @@ object SessionManager {
         )
 
         return sharedPreferences.getString(USERNAME_KEY, null)
+    }
+
+    fun getUserId(context: Context): String? {
+        val masterKey = MasterKey.Builder(context)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+
+        val sharedPreferences = EncryptedSharedPreferences.create(
+            context,
+            PREF_NAME,
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+
+        return sharedPreferences.getString(USER_ID_KEY, null)
     }
 
     fun clearSession(context: Context) {
