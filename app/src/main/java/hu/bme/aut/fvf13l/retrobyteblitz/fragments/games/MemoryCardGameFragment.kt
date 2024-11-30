@@ -46,60 +46,51 @@ class MemoryCardGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
         flippedCards.clear()
         binding.gridLayout.removeAllViews()
 
-        // Create the cards (pairs of retroItem1 to retroItem8)
         val cardImages = listOf(
             R.drawable.retro_item1, R.drawable.retro_item2, R.drawable.retro_item3,
             R.drawable.retro_item4, R.drawable.retro_item5, R.drawable.retro_item6,
             R.drawable.retro_item7, R.drawable.retro_item8
         )
 
-        // Duplicate the images to create pairs
         val cardList = mutableListOf<Card>()
         for (imageResId in cardImages) {
             cardList.add(Card(id = imageResId, imageResId = imageResId))
             cardList.add(Card(id = imageResId, imageResId = imageResId))
         }
 
-        // Shuffle the cards to randomize their positions
         cardList.shuffle()
 
-        // Add the cards to the grid layout
         for (card in cardList) {
             val cardView = ImageView(requireContext())
-            cardView.scaleType = ImageView.ScaleType.CENTER_CROP  // Back card (cover the ImageView entirely)
-            cardView.setImageResource(R.drawable.card_back) // The back image for the cards
+            cardView.scaleType = ImageView.ScaleType.CENTER_CROP
+            cardView.setImageResource(R.drawable.card_back)
             cardView.layoutParams = GridLayout.LayoutParams().apply {
                 width = 200
                 height = 300
                 setMargins(15, 15, 15, 15)
             }
 
-            // Set an onClickListener for each card
             cardView.setOnClickListener {
                 if (!card.isFlipped && flippedCards.size < 2) {
                     flipCard(card, cardView)
                 }
             }
 
-            // Add the card view to the grid layout
             binding.gridLayout.addView(cardView)
             cards.add(card)
         }
     }
 
     private fun flipCard(card: Card, cardView: ImageView) {
-        // Show the card's image
         card.isFlipped = true
         cardView.scaleType = ImageView.ScaleType.FIT_CENTER
         cardView.setImageResource(card.imageResId)
         flippedCards.add(card)
 
-        // Check if two cards are flipped
         if (flippedCards.size == 2) {
-            // Delay to give the player time to see the second flipped card
             Handler(Looper.getMainLooper()).postDelayed({
                 checkForMatch()
-            }, 500) // Wait 1 second before checking if the cards match
+            }, 500)
         }
     }
 
@@ -108,31 +99,28 @@ class MemoryCardGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
         val secondCard = flippedCards[1]
 
         if (firstCard.id != secondCard.id) {
-            // Cards do not match, flip them back
             val firstView = binding.gridLayout.getChildAt(cards.indexOf(firstCard)) as ImageView
             val secondView = binding.gridLayout.getChildAt(cards.indexOf(secondCard)) as ImageView
 
             firstCard.isFlipped = false
             secondCard.isFlipped = false
 
-            // Delay to show the second card before flipping them back
             Handler(Looper.getMainLooper()).postDelayed({
                 firstView.scaleType = ImageView.ScaleType.CENTER_CROP
                 secondView.scaleType = ImageView.ScaleType.CENTER_CROP
                 firstView.setImageResource(R.drawable.card_back)
                 secondView.setImageResource(R.drawable.card_back)
-            }, 300) // Flip back after half a second
+            }, 300)
         }
 
         flippedCards.clear()
 
-        // Check if all pairs are matched, start a new game
         if (cards.all { it.isFlipped }) {
             solvedRounds++
             updateScore()
             Handler(Looper.getMainLooper()).postDelayed({
                 startNewGame()
-            }, 500) // Wait 1 second after all pairs are matched before restarting
+            }, 500)
         }
     }
 
