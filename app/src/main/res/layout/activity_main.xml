@@ -1,31 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="8dp">
+<androidx.drawerlayout.widget.DrawerLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/drawer_layout"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
 
-    <!-- Top Fragment Container (2/6 of screen) -->
-    <FrameLayout
-        android:id="@+id/topFragmentContainer"
+<!-- Main Content -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@android:color/transparent"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="8dp">
 
-    <!-- Middle Fragment Container (3/6 of screen) -->
-    <FrameLayout
-        android:id="@+id/middleFragmentContainer"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="4"
-        android:background="@android:color/transparent"/>
+        <!-- Top Fragment Container (2/6 of screen) -->
+        <FrameLayout
+            android:id="@+id/topFragmentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"/>
 
-    <!-- Bottom Fragment Container (1/6 of screen) -->
-    <FrameLayout
-        android:id="@+id/bottomFragmentContainer"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@android:color/transparent"/>
-</LinearLayout>
+        <!-- Middle Fragment Container (3/6 of screen) -->
+        <FrameLayout
+            android:id="@+id/middleFragmentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            android:background="@android:color/transparent"/>
+
+        <!-- Bottom Fragment Container (1/6 of screen) -->
+        <FrameLayout
+            android:id="@+id/bottomFragmentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"/>
+    </LinearLayout>
+
+<!-- Right Navigation Drawer -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:background="@color/white"
+        android:fitsSystemWindows="true">
+
+        <!-- Scrollable Drawer Content -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:padding="16dp">
+
+                <!-- Profile Picture -->
+                <ImageView
+                    android:id="@+id/profile_picture"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/profile_picture"
+                    android:contentDescription="Profile Picture"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <!-- Username Section -->
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
+
+                    <EditText
+                        android:id="@+id/username_field"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="Username"
+                        android:inputType="text"
+                        android:enabled="false" />
+
+                    <ImageView
+                        android:id="@+id/edit_username_icon"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/pencil_edit"
+                        android:contentDescription="Edit Username"
+                        android:layout_marginStart="8dp" />
+                </LinearLayout>
+
+                <!-- Logout Button -->
+                <Button
+                    android:id="@+id/logout_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Log Out"
+                    android:layout_marginTop="16dp" />
+
+                <!-- Game Instructions Header -->
+                <TextView
+                    android:id="@+id/instructions_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Game Instructions"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:layout_marginTop="24dp" />
+
+                <!-- Game Instructions Container -->
+                <LinearLayout
+                    android:id="@+id/instructions_container"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <!-- Instructions will be dynamically populated -->
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </com.google.android.material.navigation.NavigationView>
+
+</androidx.drawerlayout.widget.DrawerLayout>
+

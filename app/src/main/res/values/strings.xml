@@ -2,6 +2,13 @@
     <string name="app_name">RetroByte Blitz</string>
     <string name="activity_name">Daily Exercises</string>
 
+    <!--    Category names-->
+    <string name="category1_name">Logic</string>
+    <string name="category2_name">Memory</string>
+    <string name="category3_name">Calculation</string>
+    <string name="category4_name">Visual</string>
+    <string name="category5_name">Daily exercises</string>
+
     <!-- Instructions for games -->
     <string name="sudoku_instructions">Solve the Sudoku puzzle.</string>
     <string name="calculation_instructions">Solve the math calculations.</string>
@@ -14,6 +21,7 @@
     <string name="card_instructions">Match the cards in pairs.</string>
     <string name="slider_instructions">Slide the pieces to form the image.</string>
     <string name="stroop_instructions">Identify the word that matches the color.</string>
+    <string name="roman_num_instructions">Match the pairs of roman and arab numerals.</string>
 
     <!-- Other UI strings -->
     <string name="today_date">Todays Date: %1$s</string>
