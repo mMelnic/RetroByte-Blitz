@@ -1,18 +1,14 @@
 package hu.bme.aut.fvf13l.retrobyteblitz.fragments.games
 
-import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import hu.bme.aut.fvf13l.retrobyteblitz.databinding.FragmentCalculationGameBinding
@@ -62,12 +58,10 @@ class CalculationGameFragment : Fragment(), CountdownTimerFragment.TimerEndListe
             binding.button9
         )
 
-        // Set click listeners for all buttons
         buttons.forEach { button ->
             button.setOnClickListener { onNumberSelected(button.text.toString()) }
         }
 
-        // Generate the first equation
         generateNewEquation()
 
         return binding.root
@@ -75,10 +69,9 @@ class CalculationGameFragment : Fragment(), CountdownTimerFragment.TimerEndListe
 
     private fun generateNewEquation() {
         val equation = generateEquation()
-        // Set the equation text with " = ?"
         binding.equationTextView.text = "${equation.first} = ?"
         binding.equationTextView.tag = equation.second
-        userInput = "" // Reset user input
+        userInput = ""
         totalRounds++
     }
 
@@ -125,13 +118,18 @@ class CalculationGameFragment : Fragment(), CountdownTimerFragment.TimerEndListe
                 '*' -> {
                     thirdOperand = when (operation1) {
                         '-' -> {
-                            // Ensure firstOperand >= secondOperand * thirdOperand
                             val maxThirdOperand = (firstOperand / secondOperand).coerceAtLeast(1)
                             (1..maxThirdOperand).random()
                         }
                         else -> (1..maxMultiplicationBound).random()
                     }
-                    result *= thirdOperand
+                    result = if (operation1 == '+') {
+                        firstOperand + secondOperand * thirdOperand
+                    } else if (operation1 == '-') {
+                        firstOperand - secondOperand * thirdOperand
+                    } else {
+                        result * thirdOperand
+                    }
                 }
                 else -> throw IllegalStateException("Unexpected operator: $operation2")
             }
