@@ -166,7 +166,7 @@ class DailyExercisesActivity : AppCompatActivity() {
         if (requestCode == GAME_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val score = data?.getIntExtra("SCORE", 0) ?: 0
             val currentGame = selectedGames[currentGameIndex]
-            val username = SessionManager.getUsername(this)
+            val userId = SessionManager.getUserId(this) ?: return
 
             val category = categoryGames.entries.firstOrNull { (_, games) ->
                 games.contains(currentGame)
@@ -177,6 +177,7 @@ class DailyExercisesActivity : AppCompatActivity() {
                 db.dailyExerciseScoreDao().saveScore(
                     DailyExerciseScore(
                         date = currentDate,
+                        userId = userId,
                         category = category,
                         score = score
                     )

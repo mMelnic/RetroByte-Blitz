@@ -3,6 +3,7 @@ package hu.bme.aut.fvf13l.retrobyteblitz.model
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.applandeo.materialcalendarview.CalendarDay
 import com.github.mikephil.charting.data.Entry
@@ -12,6 +13,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import hu.bme.aut.fvf13l.retrobyteblitz.R
 import hu.bme.aut.fvf13l.retrobyteblitz.auth.UserDatabase
 import hu.bme.aut.fvf13l.retrobyteblitz.databinding.ActivityStatisticsBinding
+import hu.bme.aut.fvf13l.retrobyteblitz.utility.SessionManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,6 +25,7 @@ import java.util.Locale
 class StatisticsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityStatisticsBinding
+    private lateinit var userId: String
     private val categoryColors = mapOf(
         "Logic" to Color.RED,
         "Memory" to Color.GREEN,
@@ -35,6 +38,12 @@ class StatisticsActivity : AppCompatActivity() {
 
         binding = ActivityStatisticsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        userId = SessionManager.getUserId(this) ?: run {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
 
         val progressData = loadProgressData()
 
@@ -98,10 +107,10 @@ class StatisticsActivity : AppCompatActivity() {
         val database = UserDatabase.getDatabase(this)
 
         CoroutineScope(Dispatchers.IO).launch {
-            val results = database.dailyExerciseScoreDao().getCategoryCompletionCounts()
+            val results = database.dailyExerciseScoreDao().getCategoryCompletionCountsByUser(userId)
             val validDays = results.filter { it.categoryCount == 4 }.map { it.date }
 
-            val scores = database.dailyExerciseScoreDao().getAllScores()
+            val scores = database.dailyExerciseScoreDao().getScoresByUserId(userId)
 
             scores.groupBy { it.category }.forEach { (category, scores) ->
                 val entries = scores
@@ -122,7 +131,7 @@ class StatisticsActivity : AppCompatActivity() {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
         CoroutineScope(Dispatchers.IO).launch {
-            val categoryCompletionCount = database.dailyExerciseScoreDao().getCategoryCompletionCounts()
+            val categoryCompletionCount = database.dailyExerciseScoreDao().getCategoryCompletionCountsByUser(userId)
 
             val calendarDays = mutableListOf<CalendarDay>()
             categoryCompletionCount.forEach { dateCategoryCount ->
