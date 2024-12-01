@@ -2,22 +2,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    android:layout_weight="4"
+    android:orientation="horizontal"
     android:padding="8dp"
     android:background="@android:color/transparent">
 
-    <FrameLayout
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
+    <ImageButton
+        android:id="@+id/buttonNav1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0"
-        app:menu="@menu/bottom_navigation_menu" />
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_nav_icon1" />
 
+    <ImageButton
+        android:id="@+id/buttonNav2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_nav_icon2" />
+
+    <ImageButton
+        android:id="@+id/buttonNav3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_nav_icon3"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"/>
+
+    <ImageButton
+        android:id="@+id/buttonNav4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_nav_icon4" />
 </LinearLayout>

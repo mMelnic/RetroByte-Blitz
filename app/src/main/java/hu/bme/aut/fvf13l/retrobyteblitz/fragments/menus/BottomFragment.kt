@@ -31,29 +31,18 @@ class BottomFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentBottomBinding.inflate(inflater, container, false)
-        setupBottomNavigation()
-        return binding.root
-    }
-
-    private fun setupBottomNavigation() {
-        binding.bottomNavigation.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_home -> {
-                    val intent = Intent(activity, MainActivity::class.java)
-                    startActivity(intent)
-                    true
-                }
-                R.id.nav_statistics -> {
-                    startActivity(Intent(activity, StatisticsActivity::class.java))
-                    true
-                }
-                R.id.nav_leaderboard -> {
-                    showLeaderboardDialog()
-                    true
-                }
-                else -> false
-            }
+        binding.buttonNav1.setOnClickListener {
+            val intent = Intent(activity, MainActivity::class.java)
+            startActivity(intent)
         }
+        binding.buttonNav2.setOnClickListener {
+            startActivity(Intent(activity, StatisticsActivity::class.java))
+        }
+
+        binding.buttonNav3.setOnClickListener {
+            showLeaderboardDialog()
+        }
+        return binding.root
     }
 
     private fun showLeaderboardDialog() {
