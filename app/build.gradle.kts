@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.gridlayout)
     implementation(libs.androidx.recyclerview)
+    implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -91,6 +92,7 @@ dependencies {
     implementation ("com.squareup.okhttp3:logging-interceptor:4.9.0")
     implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation (libs.material.calendar.view)
+    implementation (libs.kotlinx.coroutines.android)
 
 }
 
