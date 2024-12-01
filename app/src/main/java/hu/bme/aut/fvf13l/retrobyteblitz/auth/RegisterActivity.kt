@@ -14,7 +14,6 @@ class RegisterActivity : AppCompatActivity() {
 
     private val userDao by lazy { UserDatabase.getDatabase(this).userDao() }
 
-    // Use AuthViewModelFactory to inject UserDao into AuthViewModel
     private val authViewModel: AuthViewModel by viewModels {
         AuthViewModelFactory(userDao)
     }
@@ -29,17 +28,26 @@ class RegisterActivity : AppCompatActivity() {
             val username = binding.usernameEditText.text.toString()
             val password = binding.passwordEditText.text.toString()
 
-            if (username.isNotBlank() && password.isNotBlank()) {
-                authViewModel.register(username, password) { success ->
-                    if (success) {
-                        startActivity(Intent(this, LoginActivity::class.java))
-                        finish()
-                    } else {
-                        Toast.makeText(this, "Username already exists", Toast.LENGTH_SHORT).show()
+            when {
+                username.isBlank() || password.isBlank() -> {
+                    Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                }
+                username.contains(" ") -> {
+                    Toast.makeText(this, "Username cannot contain spaces", Toast.LENGTH_SHORT).show()
+                }
+                password.contains(" ") -> {
+                    Toast.makeText(this, "Password cannot contain spaces", Toast.LENGTH_SHORT).show()
+                }
+                else -> {
+                    authViewModel.register(username, password) { success ->
+                        if (success) {
+                            startActivity(Intent(this, LoginActivity::class.java))
+                            finish()
+                        } else {
+                            Toast.makeText(this, "Username already exists", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
-            } else {
-                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
             }
         }
     }
