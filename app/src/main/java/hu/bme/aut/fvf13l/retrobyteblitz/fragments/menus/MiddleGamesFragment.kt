@@ -2,6 +2,7 @@ package hu.bme.aut.fvf13l.retrobyteblitz.fragments.menus
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,11 +16,10 @@ class MiddleGamesFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val categoryGames = mapOf(
-        "Daily Exercises" to listOf("Game 1A", "Game 2A", "Game 3A"),
         "Logic" to listOf("Number Of", "Sudoku", "Slider"),
         "Memory" to listOf("Colors", "Grid", "Card"),
         "Calculation" to listOf("Calculation", "Sequence", "Moving Sum"),
-        "Visual" to listOf("Descending", "Stroop", "RomanNum")
+        "Visual" to listOf("Descending", "Stroop", "Roman Gladiator")
     )
 
     private var categoryName: String? = null
@@ -75,92 +75,29 @@ class MiddleGamesFragment : Fragment() {
     }
 
     private fun launchGame(gameName: String) {
-        when (gameName) {
-            "Sudoku" -> {
-                val intent = Intent(requireContext(), GameActivity::class.java).apply {
-                    putExtra("GAME_NAME", "Sudoku")
-                    putExtra("TIME_LIMIT", 60000L)
-                }
-                startActivity(intent)
+        val gameTimeLimits = mapOf(
+            "Sudoku" to 600000L,
+            "Calculation" to 120000L,
+            "Colors" to 12000L,
+            "Grid" to 60000L,
+            "Sequence" to 12000L,
+            "Number Of" to 60000L,
+            "Moving Sum" to 60000L,
+            "Descending" to 60000L,
+            "Card" to 120000L,
+            "Slider" to 60000L,
+            "Stroop" to 60000L,
+            "Roman Gladiator" to 60000L
+        )
+
+        gameTimeLimits[gameName]?.let { timeLimit ->
+            val intent = Intent(requireContext(), GameActivity::class.java).apply {
+                putExtra("GAME_NAME", gameName)
+                putExtra("TIME_LIMIT", timeLimit)
             }
-            "Calculation" -> {
-                val intent = Intent(requireContext(), GameActivity::class.java).apply {
-                    putExtra("GAME_NAME", "Calculation")
-                    putExtra("TIME_LIMIT", 120000L)
-                }
-                startActivity(intent)
-            }
-            "Colors" -> {
-                val intent = Intent(requireContext(), GameActivity::class.java).apply {
-                    putExtra("GAME_NAME", "Colors")
-                    putExtra("TIME_LIMIT", 60000L)
-                }
-                startActivity(intent)
-            }
-            "Grid" -> {
-                val intent = Intent(requireContext(), GameActivity::class.java).apply {
-                    putExtra("GAME_NAME", "Grid")
-                    putExtra("TIME_LIMIT", 60000L)
-                }
-                startActivity(intent)
-            }
-            "Sequence" -> {
-                val intent = Intent(requireContext(), GameActivity::class.java).apply {
-                    putExtra("GAME_NAME", "Sequence")
-                    putExtra("TIME_LIMIT", 60000L)
-                }
-                startActivity(intent)
-            }
-            "Number Of" -> {
-                val intent = Intent(requireContext(), GameActivity::class.java).apply {
-                    putExtra("GAME_NAME", "Number Of")
-                    putExtra("TIME_LIMIT", 60000L)
-                }
-                startActivity(intent)
-            }
-            "Moving Sum" -> {
-                val intent = Intent(requireContext(), GameActivity::class.java).apply {
-                    putExtra("GAME_NAME", "Moving Sum")
-                    putExtra("TIME_LIMIT", 60000L)
-                }
-                startActivity(intent)
-            }
-            "Descending" -> {
-                val intent = Intent(requireContext(), GameActivity::class.java).apply {
-                    putExtra("GAME_NAME", "Descending")
-                    putExtra("TIME_LIMIT", 60000L)
-                }
-                startActivity(intent)
-            }
-            "Card" -> {
-                val intent = Intent(requireContext(), GameActivity::class.java).apply {
-                    putExtra("GAME_NAME", "Card")
-                    putExtra("TIME_LIMIT", 120000L)
-                }
-                startActivity(intent)
-            }
-            "Slider" -> {
-                val intent = Intent(requireContext(), GameActivity::class.java).apply {
-                    putExtra("GAME_NAME", "Slider")
-                    putExtra("TIME_LIMIT", 60000L)
-                }
-                startActivity(intent)
-            }
-            "Stroop" -> {
-                val intent = Intent(requireContext(), GameActivity::class.java).apply {
-                    putExtra("GAME_NAME", "Stroop")
-                    putExtra("TIME_LIMIT", 60000L)
-                }
-                startActivity(intent)
-            }
-            "RomanNum" -> {
-                val intent = Intent(requireContext(), GameActivity::class.java).apply {
-                    putExtra("GAME_NAME", "RomanNum")
-                    putExtra("TIME_LIMIT", 60000L)
-                }
-                startActivity(intent)
-            }
-            // ToDo add more cases here for other games
+            startActivity(intent)
+        } ?: run {
+            Log.e("GameLauncher", "Unknown game name: $gameName")
         }
     }
 

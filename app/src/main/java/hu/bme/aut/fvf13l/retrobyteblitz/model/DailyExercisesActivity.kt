@@ -29,7 +29,7 @@ class DailyExercisesActivity : AppCompatActivity() {
         "Logic" to listOf("Number Of", "Sudoku", "Slider"),
         "Memory" to listOf("Colors", "Grid", "Card"),
         "Calculation" to listOf("Calculation", "Sequence", "Moving Sum"),
-        "Visual" to listOf("Descending", "Stroop", "RomanNum")
+        "Visual" to listOf("Descending", "Stroop", "Roman Gladiator")
     )
 
     private var currentGameIndex = 0
@@ -153,10 +153,13 @@ class DailyExercisesActivity : AppCompatActivity() {
     }
 
     private fun launchGame(gameName: String) {
+        val timeLimit = if (gameName == "Sudoku") 600000L else 60000L // 10 minutes for Sudoku, 1 minute for others
+
         val intent = Intent(this, GameActivity::class.java).apply {
             putExtra("GAME_NAME", gameName)
-            putExtra("TIME_LIMIT", 60000L)
+            putExtra("TIME_LIMIT", timeLimit)
         }
+
         startActivityForResult(intent, GAME_REQUEST_CODE)
     }
 
