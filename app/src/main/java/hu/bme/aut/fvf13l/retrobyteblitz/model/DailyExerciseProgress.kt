@@ -5,10 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "daily_exercise_progress")
 data class DailyExerciseProgress(
-    @PrimaryKey val id: Int = 1,  // Single row for storing current progress
-    val currentGameIndex: Int,    // The current game index
-    val selectedGames: String,    // JSON string of selected games
+    @PrimaryKey val userId: String,
+    val currentGameIndex: Int,
+    val selectedGames: String,
     val date: String
-    //val totalScore: Int           // Total score so far
 )
-

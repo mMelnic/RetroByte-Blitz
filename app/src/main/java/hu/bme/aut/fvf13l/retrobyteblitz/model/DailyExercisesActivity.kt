@@ -223,11 +223,12 @@ class DailyExercisesActivity : AppCompatActivity() {
     }
 
     private fun saveProgress() {
+        val userId = SessionManager.getUserId(this) ?: return
         val db = UserDatabase.getDatabase(this)
         val progressDao = db.dailyExerciseProgressDao()
 
         val progress = DailyExerciseProgress(
-            id = 1,
+            userId = userId,
             currentGameIndex = currentGameIndex,
             selectedGames = selectedGames.joinToString(","),
             date = currentDate
@@ -239,23 +240,15 @@ class DailyExercisesActivity : AppCompatActivity() {
     }
 
     private fun loadProgress(onLoaded: (DailyExerciseProgress?) -> Unit) {
+        val userId = SessionManager.getUserId(this) ?: return
         val db = UserDatabase.getDatabase(this)
         val progressDao = db.dailyExerciseProgressDao()
 
         CoroutineScope(Dispatchers.IO).launch {
-            val progress = progressDao.getProgress()
+            val progress = progressDao.getProgress(userId, currentDate)
             withContext(Dispatchers.Main) {
                 onLoaded(progress)
             }
-        }
-    }
-
-    private fun clearProgress() {
-        val db = UserDatabase.getDatabase(this)
-        val progressDao = db.dailyExerciseProgressDao()
-
-        CoroutineScope(Dispatchers.IO).launch {
-            progressDao.clearProgress()
         }
     }
 
