@@ -1,15 +1,24 @@
 package hu.bme.aut.fvf13l.retrobyteblitz
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.lifecycleScope
 import hu.bme.aut.fvf13l.retrobyteblitz.auth.LoginActivity
+import hu.bme.aut.fvf13l.retrobyteblitz.auth.UserDatabase
+import hu.bme.aut.fvf13l.retrobyteblitz.auth.UserRepository
 import hu.bme.aut.fvf13l.retrobyteblitz.databinding.ActivityMainBinding
 import hu.bme.aut.fvf13l.retrobyteblitz.fragments.menus.BottomFragment
 import hu.bme.aut.fvf13l.retrobyteblitz.fragments.menus.MiddleFragment
@@ -17,10 +26,12 @@ import hu.bme.aut.fvf13l.retrobyteblitz.fragments.menus.TopCategoryFragment
 import hu.bme.aut.fvf13l.retrobyteblitz.fragments.menus.MiddleGamesFragment
 import hu.bme.aut.fvf13l.retrobyteblitz.fragments.menus.TopFragment
 import hu.bme.aut.fvf13l.retrobyteblitz.utility.SessionManager
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var userRepository: UserRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +43,9 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.middleFragmentContainer, MiddleFragment())
             .replace(R.id.bottomFragmentContainer, BottomFragment())
             .commit()
+
+        val userDao = UserDatabase.getDatabase(this).userDao()
+        userRepository = UserRepository(userDao)
 
         setupDrawer()
     }
@@ -63,10 +77,7 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(intent, REQUEST_IMAGE_PICK)
         }
 
-        editIcon.setOnClickListener {
-            usernameField.isEnabled = true
-            usernameField.requestFocus()
-        }
+        handleUsernameUpdate(usernameField, editIcon)
 
         logoutButton.setOnClickListener {
             showLogoutDialog()
@@ -74,6 +85,51 @@ class MainActivity : AppCompatActivity() {
 
         populateInstructions()
     }
+
+    private fun handleUsernameUpdate(usernameField: EditText, editIcon: ImageView) {
+        editIcon.setOnClickListener {
+            usernameField.isEnabled = true
+            usernameField.requestFocus()
+
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(usernameField, InputMethodManager.SHOW_IMPLICIT)
+        }
+
+        usernameField.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                val newUsername = usernameField.text.toString().trim()
+                val currentUsername = SessionManager.getUsername(this)
+
+                if (newUsername.isNotEmpty() && newUsername != currentUsername) {
+                    lifecycleScope.launch {
+                        val isUpdated = userRepository.updateUsername(currentUsername!!, newUsername)
+                        if (isUpdated) {
+                            SessionManager.updateUsername(this@MainActivity, newUsername)
+                            Toast.makeText(this@MainActivity, "Username updated successfully", Toast.LENGTH_SHORT).show()
+                        } else {
+                            usernameField.setText(currentUsername)
+                            Toast.makeText(this@MainActivity, "Username already exists", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } else if (newUsername.isEmpty()) {
+                    usernameField.setText(currentUsername)
+                    Toast.makeText(this, "Username cannot be empty", Toast.LENGTH_SHORT).show()
+                }
+
+                usernameField.isEnabled = false
+            }
+        }
+
+        usernameField.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                usernameField.clearFocus() // Triggers the onFocusChangeListener
+                true
+            } else {
+                false
+            }
+        }
+    }
+
 
     private fun populateInstructions() {
         val instructionsContainer = binding.instructionsContainer

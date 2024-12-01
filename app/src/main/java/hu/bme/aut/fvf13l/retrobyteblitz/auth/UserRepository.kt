@@ -26,4 +26,16 @@ class UserRepository(private val userDao: UserDao) {
         }
     }
 
+    suspend fun updateUsername(oldUsername: String, newUsername: String): Boolean {
+        if (newUsername.isEmpty()) {
+            return false
+        }
+
+        val existingUser = userDao.getUserByUsername(newUsername)
+        if (existingUser != null) {
+            return false
+        }
+        userDao.updateUsername(oldUsername, newUsername)
+        return true
+    }
 }

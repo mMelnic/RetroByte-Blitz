@@ -78,6 +78,25 @@ object SessionManager {
         return sharedPreferences.getString(USER_ID_KEY, null)
     }
 
+    fun updateUsername(context: Context, newUsername: String) {
+        val masterKey = MasterKey.Builder(context)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+
+        val sharedPreferences = EncryptedSharedPreferences.create(
+            context,
+            PREF_NAME,
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+
+        with(sharedPreferences.edit()) {
+            putString(USERNAME_KEY, newUsername)
+            apply()
+        }
+    }
+
     fun clearSession(context: Context) {
         val masterKey = MasterKey.Builder(context)
             .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
