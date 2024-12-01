@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "daily_exercise_scores")
 data class DailyExerciseScore(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val userId: String,
     val date: String,
     val category: String,
     val score: Int

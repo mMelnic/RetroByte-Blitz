@@ -10,14 +10,15 @@ interface DailyExerciseScoreDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveScore(score: DailyExerciseScore)
 
-    @Query("SELECT * FROM daily_exercise_scores")
-    suspend fun getAllScores(): List<DailyExerciseScore>
+    @Query("SELECT * FROM daily_exercise_scores WHERE userId = :userId")
+    suspend fun getScoresByUserId(userId: String): List<DailyExerciseScore>
 
-    @Query("""
+    @Query(""" 
         SELECT date, COUNT(DISTINCT category) as categoryCount 
         FROM daily_exercise_scores 
+        WHERE userId = :userId
         GROUP BY date
     """)
-    suspend fun getCategoryCompletionCounts(): List<DateCategoryCount>
+    suspend fun getCategoryCompletionCountsByUser(userId: String): List<DateCategoryCount>
 
 }
