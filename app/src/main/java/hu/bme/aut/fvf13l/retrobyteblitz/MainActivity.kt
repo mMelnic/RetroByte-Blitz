@@ -1,11 +1,13 @@
 package hu.bme.aut.fvf13l.retrobyteblitz
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -16,6 +18,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import hu.bme.aut.fvf13l.retrobyteblitz.adapter.ProfilePictureAdapter
 import hu.bme.aut.fvf13l.retrobyteblitz.auth.LoginActivity
 import hu.bme.aut.fvf13l.retrobyteblitz.auth.UserDatabase
 import hu.bme.aut.fvf13l.retrobyteblitz.auth.UserRepository
@@ -71,10 +80,13 @@ class MainActivity : AppCompatActivity() {
         val username = SessionManager.getUsername(this)
         usernameField.setText(username)
 
+        val userId = SessionManager.getUserId(this)
+        if (userId != null) {
+            loadProfilePicture(userId)
+        }
+
         profilePicture.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.type = "image/*"
-            startActivityForResult(intent, REQUEST_IMAGE_PICK)
+            fetchProfilePicturesFromDatabase()
         }
 
         handleUsernameUpdate(usernameField, editIcon)
@@ -177,7 +189,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun showLogoutDialog() {
         AlertDialog.Builder(this)
             .setMessage("Are you sure you want to log out?")
@@ -190,16 +201,81 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK) {
-            val uri: Uri? = data?.data
-            val profilePicture = binding.profilePicture
-            profilePicture.setImageURI(uri)
+    private fun loadProfilePicture(userId: String) {
+        val database = Firebase.database
+        val userRef = database.getReference("users/$userId/profilePictureUrl")
+
+        userRef.get().addOnSuccessListener { snapshot ->
+            val profilePictureUrl = snapshot.getValue(String::class.java)
+            if (profilePictureUrl != null) {
+                Glide.with(this)
+                    .load(profilePictureUrl)
+                    .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .into(binding.profilePicture)
+            } else {
+                binding.profilePicture.setImageResource(R.drawable.profile_picture1)
+            }
+        }.addOnFailureListener {
+            binding.profilePicture.setImageResource(R.drawable.profile_picture1)
         }
     }
 
-    companion object {
-        private const val REQUEST_IMAGE_PICK = 1
+    private fun fetchProfilePicturesFromDatabase() {
+        val database = Firebase.database
+        val reference = database.getReference("profile_pictures")
+
+        reference.get().addOnSuccessListener { snapshot ->
+            val imageUrls = mutableListOf<String>()
+            for (child in snapshot.children) {
+                child.getValue(String::class.java)?.let { url ->
+                    imageUrls.add(url)
+                }
+            }
+            if (imageUrls.isNotEmpty()) {
+                showProfilePictureDialog(imageUrls)
+            } else {
+                Toast.makeText(this, "No profile pictures available", Toast.LENGTH_SHORT).show()
+            }
+        }.addOnFailureListener {
+            Toast.makeText(this, "Failed to load profile pictures", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun showProfilePictureDialog(imageUrls: List<String>) {
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.dialog_profile_pictures)
+        val recyclerView = dialog.findViewById<RecyclerView>(R.id.recyclerView)
+
+        recyclerView.layoutManager = GridLayoutManager(this, 3) // Grid of 3 columns
+        val adapter = ProfilePictureAdapter(imageUrls) { selectedImageUrl ->
+            updateProfilePicture(selectedImageUrl)
+            dialog.dismiss()
+        }
+        recyclerView.adapter = adapter
+
+        val window = dialog.window
+        window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        dialog.show()
+    }
+
+    private fun updateProfilePicture(imageUrl: String) {
+        val userId = SessionManager.getUserId(this)
+        if (userId != null) {
+            val profilePicture = binding.profilePicture
+            Glide.with(this).load(imageUrl).centerCrop().diskCacheStrategy(DiskCacheStrategy.NONE).into(profilePicture)
+
+            val database = Firebase.database
+            val userRef = database.getReference("users/$userId/profilePictureUrl")
+            userRef.setValue(imageUrl).addOnSuccessListener {
+                Toast.makeText(this, "Profile picture updated successfully", Toast.LENGTH_SHORT).show()
+            }.addOnFailureListener {
+                Toast.makeText(this, "Failed to update profile picture", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

@@ -93,6 +93,9 @@ dependencies {
     implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation (libs.material.calendar.view)
     implementation (libs.kotlinx.coroutines.android)
+    implementation (libs.material.v190)
+    implementation (libs.glide)
+    annotationProcessor (libs.compiler)
 
 }
 
