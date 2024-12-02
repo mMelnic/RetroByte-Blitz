@@ -129,6 +129,7 @@ class GameActivity : AppCompatActivity(), CountdownTimerFragment.TimerEndListene
                         1 -> launchSliderGameWithImage(null)
                     }
                 }
+                .setOnCancelListener { finish() }
                 .show()
         } else {
             pendingActions.add { promptForPhoto() }
