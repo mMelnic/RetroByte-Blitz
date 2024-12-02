@@ -16,7 +16,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import hu.bme.aut.fvf13l.retrobyteblitz.R
 import hu.bme.aut.fvf13l.retrobyteblitz.databinding.FragmentMemoryGameBinding
 import hu.bme.aut.fvf13l.retrobyteblitz.utility.GameDifficultyUtils
 import hu.bme.aut.fvf13l.retrobyteblitz.utility.ScoreUtility
@@ -26,15 +28,15 @@ class MemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
 
     private lateinit var binding: FragmentMemoryGameBinding
 
-    private val colors = listOf(
-        Color.RED,
-        Color.GREEN,
-        Color.BLUE,
-        Color.YELLOW,
-        Color.CYAN,
-        Color.MAGENTA,
-        Color.LTGRAY
-    )
+    private val colors by lazy { listOf(
+        ContextCompat.getColor(requireContext(), R.color.red_color),
+        ContextCompat.getColor(requireContext(), R.color.dusty_pink),
+        ContextCompat.getColor(requireContext(), R.color.orange_color),
+        ContextCompat.getColor(requireContext(), R.color.yellow_color),
+        ContextCompat.getColor(requireContext(), R.color.arrow_green),
+        ContextCompat.getColor(requireContext(), R.color.blue_color),
+        ContextCompat.getColor(requireContext(), R.color.dusty_purple)
+    ) }
 
     private var currentSequence = mutableListOf<Int>()
     private var userSequence = mutableListOf<Int>()
