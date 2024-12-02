@@ -13,7 +13,7 @@
         android:columnCount="3"
         android:rowCount="3"
         android:padding="16dp"
-        android:background="@color/light_gray"
+        android:background="@drawable/starry_background"
         android:useDefaultMargins="false"
         android:layout_weight="1"/>
 

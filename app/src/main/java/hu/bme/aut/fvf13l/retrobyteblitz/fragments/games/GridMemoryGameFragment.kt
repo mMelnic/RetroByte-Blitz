@@ -15,6 +15,8 @@ import hu.bme.aut.fvf13l.retrobyteblitz.databinding.FragmentGridMemoryGameBindin
 import kotlin.random.Random
 import android.view.ViewTreeObserver
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import hu.bme.aut.fvf13l.retrobyteblitz.R
 import hu.bme.aut.fvf13l.retrobyteblitz.utility.GameDifficultyUtils
 import hu.bme.aut.fvf13l.retrobyteblitz.utility.ScoreUtility
 
@@ -59,18 +61,16 @@ class GridMemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
 
         binding.gridLayout.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
-                // Remove listener to prevent multiple calls
                 binding.gridLayout.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
-                // Calculate cell dimensions
                 val gridWidth = binding.gridLayout.width - binding.gridLayout.paddingLeft - binding.gridLayout.paddingRight
                 val gridHeight = binding.gridLayout.height - binding.gridLayout.paddingTop - binding.gridLayout.paddingBottom
 
                 val numColumns = binding.gridLayout.columnCount
                 val numRows = binding.gridLayout.rowCount
 
-                val cellWidth = (gridWidth - (numColumns - 1) * 16) / numColumns  // Adjust for margins
-                val cellHeight = (gridHeight - (numRows - 1) * 16) / numRows  // Adjust for margins
+                val cellWidth = (gridWidth - (numColumns - 1) * 22) / numColumns  // Adjust for margins
+                val cellHeight = (gridHeight - (numRows - 1) * 22) / numRows  // Adjust for margins
 
                 println("Calculated cell size: $cellWidth x $cellHeight")
 
@@ -81,7 +81,7 @@ class GridMemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
                     val params = GridLayout.LayoutParams().apply {
                         width = cellWidth
                         height = cellHeight
-                        setMargins(8, 8, 8, 8)
+                        setMargins(12, 12, 12, 12)
                     }
 
                     view.layoutParams = params
@@ -93,7 +93,6 @@ class GridMemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
         })
     }
 
-
     private fun onSquareClicked(index: Int) {
         val view = binding.gridLayout.getChildAt(index)
         if (userSelectedSquares.contains(index)) {
@@ -101,7 +100,8 @@ class GridMemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
             view.setBackgroundColor(Color.WHITE)
         } else {
             userSelectedSquares.add(index)
-            view.setBackgroundColor(Color.YELLOW)
+            val custom = ContextCompat.getColor(requireContext(), R.color.yellow_pastel)
+            view.setBackgroundColor(custom)
         }
 
         if (userSelectedSquares.size == correctSquares.size) {
@@ -127,7 +127,8 @@ class GridMemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
         handler.postDelayed({
             correctSquares.forEach {
                 val view = binding.gridLayout.getChildAt(it)
-                view.setBackgroundColor(Color.YELLOW)
+                val custom = ContextCompat.getColor(requireContext(), R.color.yellow_pastel)
+                view.setBackgroundColor(custom)
             }
 
             handler.postDelayed({
