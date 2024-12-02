@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="12dp"
     android:orientation="vertical">
 
@@ -11,8 +11,20 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@drawable/empty_window"
-        android:padding="15dp"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:layout_marginBottom="10dp"
         android:gravity="center">
+
+        <Button
+            android:id="@+id/backButton"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="3dp"
+            android:layout_width="45dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="30dp"
+            android:background="@drawable/back_arrow_green" />
 
         <!-- Line Chart -->
         <com.github.mikephil.charting.charts.LineChart
@@ -28,14 +40,17 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@drawable/empty_empty_window">
 
         <com.applandeo.materialcalendarview.CalendarView
             android:id="@+id/exerciseCalendar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:headerColor="@color/arrow_green"
+            app:abbreviationsBarColor="@color/calendar"
+            app:pagesColor="@color/calendar"
             android:layout_margin="16dp"/>
-
 
     </LinearLayout>
 

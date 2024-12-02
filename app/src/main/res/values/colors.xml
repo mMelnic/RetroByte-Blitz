@@ -17,4 +17,6 @@
     <color name="green_pastel">#FFC8E6C9</color>
     <color name="blue_pastel">#FFBBDEFB</color>
     <color name="yellow_pastel">#FFFFF9C4</color>
+    <color name="arrow_green">#9CD879</color>
+    <color name="calendar">#FAF6F1</color>
 </resources>

@@ -45,6 +45,10 @@ class StatisticsActivity : AppCompatActivity() {
             return
         }
 
+        binding.backButton.setOnClickListener {
+            finish()
+        }
+
         val progressData = loadProgressData()
 
         setupLineChart(progressData)
