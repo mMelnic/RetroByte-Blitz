@@ -78,9 +78,9 @@ class MiddleGamesFragment : Fragment() {
         val gameTimeLimits = mapOf(
             "Sudoku" to 600000L,
             "Calculation" to 120000L,
-            "Colors" to 12000L,
+            "Colors" to 120000L,
             "Grid" to 60000L,
-            "Sequence" to 12000L,
+            "Sequence" to 120000L,
             "Number Of" to 60000L,
             "Moving Sum" to 60000L,
             "Descending" to 60000L,
