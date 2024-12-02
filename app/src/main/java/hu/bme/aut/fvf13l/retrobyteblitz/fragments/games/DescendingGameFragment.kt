@@ -47,16 +47,15 @@ class DescendingGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
     private fun startNewRound() {
         totalRounds++
 
-        // Calculate the flash duration based on user progress
-        val baseFlashTime = 3000 // Initial flash time in milliseconds (e.g., 3 seconds)
-        val progressFactor = 200 // Decrease time by this value per round
-        val minFlashTime = 1000 // Minimum flash time to maintain playability
+        // Calculating the flash duration based on user progress
+        val baseFlashTime = 3000
+        val progressFactor = 200 // Decrease time value per round
+        val minFlashTime = 1000
 
         val flashTime = (baseFlashTime - (solvedRounds * progressFactor)).coerceAtLeast(minFlashTime)
 
         setButtonsEnabled(false)
         gameScope.launch {
-            // Generate counts on a background thread
             val counts = withContext(Dispatchers.Default) {
                 generateDistinctCounts(8)
             }
@@ -68,7 +67,6 @@ class DescendingGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
                 }
             }
 
-            // Shuffle the list to randomize the grid order
             gridImages = imagesWithOccurrences.shuffled()
 
             val imageViews = listOf(
@@ -80,9 +78,8 @@ class DescendingGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
                 imageView.setImageResource(gridImages[index])
             }
 
-            // Flash the grid for 3 seconds
             handler.postDelayed({
-                imageViews.forEach { it.setImageResource(0) }  // Clear the images
+                imageViews.forEach { it.setImageResource(0) }
                 setButtonsEnabled(true)
             }, flashTime.toLong())
         }
@@ -95,7 +92,7 @@ class DescendingGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
     }
 
     private fun generateDistinctCounts(totalCells: Int): List<Int> {
-        val num1 = Random.nextInt(1, totalCells) // Ensure at least 1 appearance
+        val num1 = Random.nextInt(1, totalCells)
         var num2: Int
         do {
             num2 = Random.nextInt(1, totalCells - num1 + 1)
@@ -140,35 +137,27 @@ class DescendingGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
     }
 
     private fun checkUserAnswer() {
-        // Initialize count map with all characters set to zero
         val allCounts = characters.associateWith { 0 }.toMutableMap()
 
-        // Update counts with actual occurrences from the grid
         gridImages.groupingBy { it }.eachCount().forEach { (key, value) ->
             allCounts[key] = value
         }
 
-        // Sort the characters by count in descending order
         val countMap = allCounts.entries.sortedByDescending { it.value }
         val correctAnswer = countMap.map { it.key }
 
-        // Check if the user's answer matches the top three characters by count
         if (userAnswer == correctAnswer.take(3)) {
-            solvedRounds++ // Increment solved rounds if the answer is correct
-            Toast.makeText(requireContext(), "Correct!", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(requireContext(), "Incorrect. Try again!", Toast.LENGTH_SHORT).show()
+            solvedRounds++
         }
         updateScore()
 
-        // Start a new round after a brief delay
         handler.postDelayed({
             userAnswer.clear()
             binding.answerView1.setImageResource(0)
             binding.answerView2.setImageResource(0)
             binding.answerView3.setImageResource(0)
             startNewRound()
-        }, 1000)
+        }, 500)
     }
     private fun updateScore() {
         binding.scoreTextView.text = "Correct: $solvedRounds / $totalRounds"
@@ -203,4 +192,3 @@ class DescendingGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
         displayFinalScore()
     }
 }
-
