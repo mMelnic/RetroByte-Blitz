@@ -15,7 +15,7 @@ object GameDifficultyUtils {
         "Card" to 5,
         "Slider" to 3,
         "Stroop" to 1,
-        "Roman Gladiator" to 3
+        "Roman Numerals" to 3
     )
 
     private fun getDifficultyLevel(gameName: String): Int {

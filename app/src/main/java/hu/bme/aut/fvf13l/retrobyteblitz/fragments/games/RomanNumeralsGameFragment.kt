@@ -15,7 +15,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import hu.bme.aut.fvf13l.retrobyteblitz.R
 import hu.bme.aut.fvf13l.retrobyteblitz.databinding.FragmentRomanNumeralsGameBinding
 import hu.bme.aut.fvf13l.retrobyteblitz.utility.GameDifficultyUtils
 import hu.bme.aut.fvf13l.retrobyteblitz.utility.ScoreUtility
@@ -36,9 +38,9 @@ class RomanNumeralsGameFragment : Fragment(), CountdownTimerFragment.TimerEndLis
 
     private fun generateRomanNumeral(level: Int, usedValues: MutableSet<Int>): Pair<String, Int> {
         val maxValue = when {
-            level <= 3 -> 20 // Level 1: Roman numerals between 1-10
-            level <= 7 -> 50 // Level 2: Roman numerals between 1-50
-            else -> 100 // Level 3 and beyond: 1-100
+            level <= 3 -> 20
+            level <= 7 -> 50
+            else -> 100
         }
 
         var value: Int
@@ -165,16 +167,16 @@ class RomanNumeralsGameFragment : Fragment(), CountdownTimerFragment.TimerEndLis
             selectedTextView = textView
             textView.setBackgroundColor(Color.LTGRAY) // Highlight selection
         } else if (isFirstRoman == isRoman) {
-            Toast.makeText(requireContext(), "Cannot select two of the same type", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Cannot select two numbers of the same type", Toast.LENGTH_SHORT).show()
         } else {
-            // Check if the pair matches
             val first = selectedTextView!!
             if (romanArabicPairs[first] == textView) {
                 // Correct match
                 first.isClickable = false
                 textView.isClickable = false
-                first.setBackgroundColor(Color.GREEN)
-                textView.setBackgroundColor(Color.GREEN)
+                val customGreen = ContextCompat.getColor(requireContext(), R.color.green_pastel)
+                first.setBackgroundColor(customGreen)
+                textView.setBackgroundColor(customGreen)
 
                 matchedPairs++
                 if (matchedPairs == romanArabicPairs.size / 2) {
@@ -246,4 +248,3 @@ class RomanNumeralsGameFragment : Fragment(), CountdownTimerFragment.TimerEndLis
         displayFinalScore()
     }
 }
-

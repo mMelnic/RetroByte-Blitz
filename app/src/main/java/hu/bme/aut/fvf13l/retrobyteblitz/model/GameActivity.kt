@@ -113,7 +113,7 @@ class GameActivity : AppCompatActivity(), CountdownTimerFragment.TimerEndListene
             "Descending" -> DescendingGameFragment()
             "Card" -> MemoryCardGameFragment()
             "Stroop" -> StroopGameFragment()
-            "Roman Gladiator" -> RomanNumeralsGameFragment()
+            "Roman Numerals" -> RomanNumeralsGameFragment()
             else -> null
         }
     }

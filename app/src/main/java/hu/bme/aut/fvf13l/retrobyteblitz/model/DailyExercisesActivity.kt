@@ -29,7 +29,7 @@ class DailyExercisesActivity : AppCompatActivity() {
         "Logic" to listOf("Number Of", "Sudoku", "Slider"),
         "Memory" to listOf("Colors", "Grid", "Card"),
         "Calculation" to listOf("Calculation", "Sequence", "Moving Sum"),
-        "Visual" to listOf("Descending", "Stroop", "Roman Gladiator")
+        "Visual" to listOf("Descending", "Stroop", "Roman Numerals")
     )
 
     private var currentGameIndex = 0
