@@ -19,7 +19,7 @@ class MiddleGamesFragment : Fragment() {
         "Logic" to listOf("Number Of", "Sudoku", "Slider"),
         "Memory" to listOf("Colors", "Grid", "Card"),
         "Calculation" to listOf("Calculation", "Sequence", "Moving Sum"),
-        "Visual" to listOf("Descending", "Stroop", "Roman Gladiator")
+        "Visual" to listOf("Descending", "Stroop", "Roman Numerals")
     )
 
     private var categoryName: String? = null
@@ -48,9 +48,9 @@ class MiddleGamesFragment : Fragment() {
         val games = categoryGames[categoryName] ?: emptyList()
 
         if (games.size == 3) {
-            binding.buttonGame1.text = games[0]
-            binding.buttonGame2.text = games[1]
-            binding.buttonGame3.text = games[2]
+            binding.textViewGame1.text = games[0]
+            binding.textViewGame2.text = games[1]
+            binding.textViewGame3.text = games[2]
         }
 
         return binding.root
@@ -87,7 +87,7 @@ class MiddleGamesFragment : Fragment() {
             "Card" to 120000L,
             "Slider" to 60000L,
             "Stroop" to 60000L,
-            "Roman Gladiator" to 60000L
+            "Roman Numerals" to 60000L
         )
 
         gameTimeLimits[gameName]?.let { timeLimit ->
