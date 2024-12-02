@@ -1,32 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="100dp"
     android:layout_weight="4"
     android:orientation="horizontal"
-    android:padding="8dp"
-    android:background="@android:color/transparent">
+    android:paddingVertical="15dp"
+    android:paddingHorizontal="30dp"
+    android:layout_marginHorizontal="10dp"
+    android:background="@drawable/navigation_bar">
 
     <ImageButton
         android:id="@+id/buttonNav1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:scaleType="centerInside"
         android:layout_weight="1"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_nav_icon1" />
 
     <ImageButton
         android:id="@+id/buttonNav2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:scaleType="centerInside"
         android:layout_weight="1"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_nav_icon2" />
 
     <ImageButton
         android:id="@+id/buttonNav3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:scaleType="centerInside"
         android:layout_weight="1"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_nav_icon3"
@@ -35,8 +40,9 @@
 
     <ImageButton
         android:id="@+id/buttonNav4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:scaleType="centerInside"
         android:layout_weight="1"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_nav_icon4" />

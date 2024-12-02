@@ -20,7 +20,7 @@
         android:layout_width="0dp"
         android:layout_height="80dp"
         android:padding="16dp"
-        android:gravity="center"
+        android:gravity="center_vertical"
         android:layout_weight="1"
         android:autoSizeTextType="uniform"
         android:autoSizeMinTextSize="30sp"
