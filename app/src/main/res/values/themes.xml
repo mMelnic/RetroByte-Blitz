@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.RetroByteBlitz" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.RetroByteBlitz" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:fontFamily">@font/robotomono_medium</item>
+        <item name="android:letterSpacing">0.1</item>
+        <item name="android:windowBackground">@drawable/background_image</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>

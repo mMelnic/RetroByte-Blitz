@@ -5,15 +5,15 @@
     android:orientation="vertical"
     android:padding="8dp">
 
-    <!-- Top Fragment Container (2/6 of screen) -->
+    <!-- Top Fragment Container -->
     <FrameLayout
         android:id="@+id/topGameFragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="1.5"
         android:background="@android:color/transparent"/>
 
-    <!-- Middle Fragment Container (3/6 of screen) -->
+    <!-- Middle Fragment Container -->
     <FrameLayout
         android:id="@+id/middleGameFragmentContainer"
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
         android:layout_weight="6"
         android:background="@android:color/transparent"/>
 
-    <!-- Bottom Fragment Container (1/6 of screen) -->
+    <!-- Bottom Fragment Container -->
     <FrameLayout
         android:id="@+id/bottomGameFragmentContainer"
         android:layout_width="match_parent"
