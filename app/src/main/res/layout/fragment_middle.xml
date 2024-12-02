@@ -24,7 +24,7 @@
 
     <Button
         android:id="@+id/buttonDailyActivities"
-        android:layout_width="297dp"
+        android:layout_width="279dp"
         android:layout_height="55dp"
         android:layout_columnWeight="1"
         android:layout_gravity="start"
@@ -32,7 +32,7 @@
         android:layout_marginBottom="14dp"
         android:background="@drawable/text_view_nude"
         android:text="@string/category5_name"
-        android:textSize="25dp" />
+        android:textSize="22sp" />
 
     <!-- Second Row -->
     <ImageView
@@ -45,13 +45,13 @@
         app:srcCompat="@drawable/folder_icon"/>
     <Button
         android:id="@+id/buttonLogic"
-        android:layout_width="297dp"
+        android:layout_width="279dp"
         android:layout_height="55dp"
         android:layout_marginBottom="14dp"
         android:layout_columnWeight="1"
         android:background="@drawable/text_view_nude"
         android:text="@string/category1_name"
-        android:textSize="25sp"
+        android:textSize="23sp"
         android:layout_gravity="start" />
 
     <!-- Third Row -->
@@ -65,13 +65,13 @@
         app:srcCompat="@drawable/folder_icon"/>
     <Button
         android:id="@+id/buttonMemory"
-        android:layout_width="297dp"
+        android:layout_width="279dp"
         android:layout_height="55dp"
         android:layout_marginBottom="14dp"
         android:layout_columnWeight="1"
         android:background="@drawable/text_view_nude"
         android:text="@string/category2_name"
-        android:textSize="25sp"
+        android:textSize="23sp"
         android:layout_gravity="start" />
 
     <!-- Fourth Row -->
@@ -85,13 +85,13 @@
         app:srcCompat="@drawable/folder_icon"/>
     <Button
         android:id="@+id/buttonCalculation"
-        android:layout_width="297dp"
+        android:layout_width="279dp"
         android:layout_height="55dp"
         android:layout_marginBottom="14dp"
         android:layout_columnWeight="1"
         android:background="@drawable/text_view_nude"
         android:text="@string/category3_name"
-        android:textSize="25sp"
+        android:textSize="23sp"
         android:layout_gravity="start" />
 
     <!-- Fifth Row -->
@@ -105,13 +105,13 @@
         app:srcCompat="@drawable/folder_icon"/>
     <Button
         android:id="@+id/buttonKnowledge"
-        android:layout_width="297dp"
+        android:layout_width="279dp"
         android:layout_height="55dp"
         android:layout_marginBottom="14dp"
         android:layout_columnWeight="1"
         android:background="@drawable/text_view_nude"
         android:text="@string/category4_name"
-        android:textSize="25sp"
+        android:textSize="23sp"
         android:layout_gravity="start" />
 
 </GridLayout>
