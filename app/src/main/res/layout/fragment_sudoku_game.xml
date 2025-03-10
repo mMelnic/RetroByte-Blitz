@@ -16,6 +16,6 @@
         android:rowCount="9"
         android:padding="8dp"
         android:layout_marginTop="80dp"
-        android:layout_marginBottom="20dp"/>
-<!--        android:background="@drawable/sudoku_grid_background"-->
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/sudoku"/>
 </LinearLayout>
