@@ -10,18 +10,18 @@
     <string name="category5_name">Daily exercises</string>
 
     <!-- Instructions for games -->
-    <string name="sudoku_instructions">Solve the Sudoku puzzle.</string>
-    <string name="calculation_instructions">Solve the math calculations.</string>
-    <string name="colors_instructions">Match the colors in the grid.</string>
-    <string name="grid_instructions">Find matching pairs of cards.</string>
-    <string name="sequence_instructions">Complete the number sequence.</string>
-    <string name="number_of_instructions">Count the objects in the image.</string>
-    <string name="moving_sum_instructions">Calculate the moving sum of numbers.</string>
-    <string name="descending_instructions">Arrange the numbers in descending order.</string>
-    <string name="card_instructions">Match the cards in pairs.</string>
-    <string name="slider_instructions">Slide the pieces to form the image.</string>
-    <string name="stroop_instructions">Identify the word that matches the color.</string>
-    <string name="roman_num_instructions">Match the pairs of roman and arab numerals.</string>
+    <string name="sudoku_instructions">Sudoku: Fill the Sudoku grid by placing numbers 1 to 9 in each row, column, and 3x3 sub-grid without repetition.</string>
+    <string name="calculation_instructions">Calculation: Solve the mathematical expressions by performing the required calculations.</string>
+    <string name="colors_instructions">Colors: Memorize the sequence of flashing colors and replicate it by pressing the corresponding buttons in the same order.</string>
+    <string name="grid_instructions">Grid: Watch for the cells that light up. After they flash, click the same cells to clear the grid.</string>
+    <string name="sequence_instructions">Sequence: Identify the pattern and complete the arithmetic or geometric sequence with the correct number.</string>
+    <string name="number_of_instructions">Number of: Count the objects shown in the image and provide the correct total.</string>
+    <string name="moving_sum_instructions">Moving Sum: Calculate the sum of a series of moving numbers.</string>
+    <string name="descending_instructions">Descending: Arrange the items or images in descending order based on their appearance, including zero.</string>
+    <string name="card_instructions">Cards: Find and match all the pairs of identical cards to complete the game.</string>
+    <string name="slider_instructions">Slider: Rearrange the puzzle by swapping two pieces at a time to restore the original image. You can use the default image or upload your own.</string>
+    <string name="stroop_instructions">Stroop: Click the button that corresponds to the color of the text, ignoring the meaning of the word.</string>
+    <string name="roman_num_instructions">Roman Numerals: Match the Roman numerals to their equivalent Arabic numerals to form pairs.</string>
 
     <!-- Other UI strings -->
     <string name="today_date">Todays Date: %1$s</string>
