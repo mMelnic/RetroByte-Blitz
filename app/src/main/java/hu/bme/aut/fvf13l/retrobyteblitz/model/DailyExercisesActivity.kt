@@ -148,6 +148,7 @@ class DailyExercisesActivity : AppCompatActivity() {
             "Card" -> getString(R.string.card_instructions)
             "Slider" -> getString(R.string.slider_instructions)
             "Stroop" -> getString(R.string.stroop_instructions)
+            "Roman Numerals" -> getString(R.string.roman_num_instructions)
             else -> getString(R.string.no_instructions)
         }
     }
