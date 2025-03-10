@@ -209,7 +209,7 @@ class SlidingGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener 
             .setView(scoreLayout)
             .setMessage("You solved $solvedGames rounds!")
             .setPositiveButton("OK") { _, _ -> sendResultAndFinish(score) }
-            .setOnDismissListener { activity?.finish() }
+            .setOnDismissListener { sendResultAndFinish(score) }
             .show()
 
     }

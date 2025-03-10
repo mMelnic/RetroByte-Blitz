@@ -45,11 +45,9 @@ class StroopGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
             Pair("Orange", R.color.orange_color)
         )
 
-        // Randomly select text and color independently
         val (textColorName, _) = colorOptions.random()
         val (_, displayColorRes) = colorOptions.random()
 
-        // Set the `tvColor` text and color
         binding.tvColor.text = textColorName
         binding.tvColor.setTextColor(requireContext().getColor(displayColorRes))
     }
@@ -77,17 +75,14 @@ class StroopGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
     }
 
     private fun checkAnswer(selectedColorResId: Int) {
-        // Get the actual displayed color of `tvColor`
         val displayedColorId = (binding.tvColor.currentTextColor)
 
-        // Check if the button color matches the text color of `tvColor`
         if (displayedColorId == requireContext().getColor(selectedColorResId)) {
             correctAnswers++
         }
         updateScore()
         loadNewRound()
     }
-
 
     private fun updateScore() {
         binding.tvScore.text = "Score: $correctAnswers/$totalRounds"
@@ -105,7 +100,7 @@ class StroopGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
             .setView(scoreLayout)
             .setMessage("You solved $correctAnswers out of $totalRounds rounds!")
             .setPositiveButton("OK") { _, _ -> sendResultAndFinish(score) }
-            .setOnDismissListener { activity?.finish() }
+            .setOnDismissListener { sendResultAndFinish(score) }
             .show()
 
     }

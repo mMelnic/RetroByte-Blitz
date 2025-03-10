@@ -151,7 +151,7 @@ class RomanNumeralsGameFragment : Fragment(), CountdownTimerFragment.TimerEndLis
     }
 
     private fun onNumberClicked(textView: TextView) {
-        if (!textView.isClickable) return // Already matched, ignore
+        if (!textView.isClickable) return // Already matched
 
         // Deselecting view
         if (selectedTextView == textView) {
@@ -165,7 +165,7 @@ class RomanNumeralsGameFragment : Fragment(), CountdownTimerFragment.TimerEndLis
 
         if (selectedTextView == null) {
             selectedTextView = textView
-            textView.setBackgroundColor(Color.LTGRAY) // Highlight selection
+            textView.setBackgroundColor(Color.LTGRAY) // Highlighting selection
         } else if (isFirstRoman == isRoman) {
             Toast.makeText(requireContext(), "Cannot select two numbers of the same type", Toast.LENGTH_SHORT).show()
         } else {
@@ -232,7 +232,7 @@ class RomanNumeralsGameFragment : Fragment(), CountdownTimerFragment.TimerEndLis
             .setView(scoreLayout)
             .setMessage("You solved $successfulRounds rounds!")
             .setPositiveButton("OK") { _, _ -> sendResultAndFinish(score) }
-            .setOnDismissListener { activity?.finish() }
+            .setOnDismissListener { sendResultAndFinish(score) }
             .show()
     }
 

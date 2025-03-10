@@ -140,7 +140,7 @@ class MemoryCardGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
             .setView(scoreLayout)
             .setMessage("You solved $solvedRounds rounds!")
             .setPositiveButton("OK") { _, _ -> sendResultAndFinish(score) }
-            .setOnDismissListener { activity?.finish() }
+            .setOnDismissListener { sendResultAndFinish(score) }
             .show()
 
     }

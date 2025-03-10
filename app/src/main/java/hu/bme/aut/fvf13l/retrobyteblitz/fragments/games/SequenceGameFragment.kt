@@ -66,7 +66,6 @@ class SequenceGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener
     private fun generateSequence(): List<Int> {
         val sequence = mutableListOf<Int>()
 
-        //val isArithmetic = Random.nextBoolean()
         val isArithmetic = Random.nextInt(100) < 70
 
         if (isArithmetic) {
@@ -126,7 +125,7 @@ class SequenceGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener
             .setView(scoreLayout)
             .setMessage("You solved $correctAnswers out of $totalRounds rounds!")
             .setPositiveButton("OK") { _, _ -> sendResultAndFinish(score) }
-            .setOnDismissListener { activity?.finish() }
+            .setOnDismissListener { sendResultAndFinish(score) }
             .show()
 
     }

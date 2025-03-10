@@ -198,7 +198,7 @@ class MovingSumGameFragment : Fragment(), CountdownTimerFragment.TimerEndListene
             .setView(scoreLayout)
             .setMessage("You solved $correctAnswers rounds!")
             .setPositiveButton("OK") { _, _ -> sendResultAndFinish(score) }
-            .setOnDismissListener { activity?.finish() }
+            .setOnDismissListener { sendResultAndFinish(score) }
             .show()
 
     }

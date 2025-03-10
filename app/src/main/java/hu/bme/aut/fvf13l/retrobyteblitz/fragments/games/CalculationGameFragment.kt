@@ -181,7 +181,7 @@ class CalculationGameFragment : Fragment(), CountdownTimerFragment.TimerEndListe
             .setView(scoreLayout)
             .setMessage("You solved $correctAnswersCount equations correctly!")
             .setPositiveButton("OK") { _, _ -> sendResultAndFinish(score) }
-            .setOnDismissListener { activity?.finish() }
+            .setOnDismissListener { sendResultAndFinish(score) }
             .show()
 
     }

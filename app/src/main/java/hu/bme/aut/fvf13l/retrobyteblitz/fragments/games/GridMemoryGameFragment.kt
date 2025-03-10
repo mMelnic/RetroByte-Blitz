@@ -69,8 +69,8 @@ class GridMemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
                 val numColumns = binding.gridLayout.columnCount
                 val numRows = binding.gridLayout.rowCount
 
-                val cellWidth = (gridWidth - (numColumns - 1) * 22) / numColumns  // Adjust for margins
-                val cellHeight = (gridHeight - (numRows - 1) * 22) / numRows  // Adjust for margins
+                val cellWidth = (gridWidth - (numColumns - 1) * 22) / numColumns  // Adjustment for margins
+                val cellHeight = (gridHeight - (numRows - 1) * 22) / numRows  // Adjustment for margins
 
                 println("Calculated cell size: $cellWidth x $cellHeight")
 
@@ -108,7 +108,6 @@ class GridMemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
             checkUserSolution()
         }
     }
-
 
     private fun startNewRound() {
         userSelectedSquares = mutableListOf()
@@ -171,7 +170,7 @@ class GridMemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
             .setView(scoreLayout)
             .setMessage("You solved $successfulRounds out of $totalRounds rounds!")
             .setPositiveButton("OK") { _, _ -> sendResultAndFinish(score) }
-            .setOnDismissListener { activity?.finish() }
+            .setOnDismissListener { sendResultAndFinish(score) }
             .show()
 
     }
@@ -188,5 +187,3 @@ class GridMemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
         displayFinalScore()
     }
 }
-
-

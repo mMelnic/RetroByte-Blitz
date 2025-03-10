@@ -180,7 +180,7 @@ class SudokuGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
             .setView(scoreLayout)
             .setMessage("You solved $successfulRounds rounds!")
             .setPositiveButton("OK") { _, _ -> sendResultAndFinish(score) }
-            .setOnDismissListener { activity?.finish() }
+            .setOnDismissListener { sendResultAndFinish(score) }
             .show()
 
     }
@@ -197,4 +197,3 @@ class SudokuGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
         displayFinalScore()
     }
 }
-

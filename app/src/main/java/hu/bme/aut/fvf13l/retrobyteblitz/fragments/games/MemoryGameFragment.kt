@@ -117,7 +117,6 @@ class MemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
         }, 200)
     }
 
-
     private fun onColorSelected(colorIndex: Int) {
         if (userSequence.size < currentSequence.size) {
             userSequence.add(colorIndex)
@@ -144,7 +143,6 @@ class MemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
         }
     }
 
-
     private fun addColorToSequence(colorIndex: Int) {
         val view = View(context)
         view.setBackgroundColor(colors[colorIndex])
@@ -166,7 +164,7 @@ class MemoryGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
             .setView(scoreLayout)
             .setMessage("You solved $successfulRounds out of $totalRounds rounds!")
             .setPositiveButton("OK") { _, _ -> sendResultAndFinish(score) }
-            .setOnDismissListener { activity?.finish() }
+            .setOnDismissListener { sendResultAndFinish(score) }
             .show()
 
     }

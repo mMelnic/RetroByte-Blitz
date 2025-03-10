@@ -48,7 +48,7 @@ class NumberOfGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener
     }
 
     private fun startNewRound() {
-        // Randomly distribute characters in the grid
+        // Randomly distributing characters in the grid
         val gridItems = MutableList(16) { characters.random() }
 
         val imageViews = listOf(
@@ -62,7 +62,6 @@ class NumberOfGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener
             imageView.setImageResource(gridItems[index])
         }
 
-        // Choose a character type for the user to count
         val targetCharacter = characters.random()
         correctAnswer = gridItems.count { it == targetCharacter }
         binding.questionImageView.setImageResource(targetCharacter)
@@ -71,12 +70,10 @@ class NumberOfGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener
         totalRounds++
     }
 
-
     private fun onNumberSelected(digit: String) {
         userAnswer += digit
         binding.questionMarkTextView.text = userAnswer
 
-        // Check if the user input matches the length of the correct answer
         val correctAnswerString = correctAnswer.toString()
         if (userAnswer.length == correctAnswerString.length) {
             if (userAnswer == correctAnswerString) {
@@ -105,7 +102,7 @@ class NumberOfGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener
             .setView(scoreLayout)
             .setMessage("You solved $correctAnswers out of $totalRounds rounds!")
             .setPositiveButton("OK") { _, _ -> sendResultAndFinish(score) }
-            .setOnDismissListener { activity?.finish() }
+            .setOnDismissListener { sendResultAndFinish(score) }
             .show()
 
     }

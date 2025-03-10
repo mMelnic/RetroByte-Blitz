@@ -175,7 +175,7 @@ class DescendingGameFragment : Fragment(), CountdownTimerFragment.TimerEndListen
             .setView(scoreLayout)
             .setMessage("You solved $solvedRounds out of $totalRounds rounds!")
             .setPositiveButton("OK") { _, _ -> sendResultAndFinish(score) }
-            .setOnDismissListener { activity?.finish() }
+            .setOnDismissListener { sendResultAndFinish(score) }
             .show()
 
     }
