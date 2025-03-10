@@ -20,10 +20,6 @@ class TopFragment : Fragment() {
         return binding.root
     }
 
-    fun setCategoryTitle(title: String) {
-        binding.topTextView.text = title
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
