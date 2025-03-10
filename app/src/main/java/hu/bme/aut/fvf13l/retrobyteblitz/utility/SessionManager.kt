@@ -124,9 +124,8 @@ object SessionManager {
     private fun resetKeysetIfNeeded(context: Context) {
         try {
             val masterKey = getMasterKey(context)
-            getEncryptedSharedPreferences(context, masterKey) // Attempt to initialize
+            getEncryptedSharedPreferences(context, masterKey)
         } catch (e: Exception) {
-            // If an error occurs, clear and reset keyset
             val masterKey = getMasterKey(context)
             val sharedPreferences = getEncryptedSharedPreferences(context, masterKey)
 

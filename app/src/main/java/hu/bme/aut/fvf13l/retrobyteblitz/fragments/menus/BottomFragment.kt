@@ -44,7 +44,6 @@ class BottomFragment : Fragment() {
         }
 
         binding.buttonNav4.setOnClickListener {
-            // Access the DrawerLayout in the activity and open the drawer
             (activity as? MainActivity)?.openNavigationDrawer()
         }
         return binding.root

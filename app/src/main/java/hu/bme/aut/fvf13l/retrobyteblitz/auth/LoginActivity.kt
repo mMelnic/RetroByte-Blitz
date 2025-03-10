@@ -54,7 +54,7 @@ class LoginActivity : AppCompatActivity() {
 
         binding.registerButton.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
-            registerActivityResultLauncher.launch(intent)  // Use the launcher instead of just startActivity()
+            registerActivityResultLauncher.launch(intent)
         }
     }
 
