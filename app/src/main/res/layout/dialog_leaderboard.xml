@@ -9,6 +9,8 @@
         android:id="@+id/dateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="14sp"
         android:text="Leaderboard for: YYYY-MM-DD"/>
 
     <androidx.recyclerview.widget.RecyclerView
