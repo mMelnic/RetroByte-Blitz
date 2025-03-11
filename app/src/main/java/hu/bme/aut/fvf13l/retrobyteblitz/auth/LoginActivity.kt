@@ -7,11 +7,13 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import hu.bme.aut.fvf13l.retrobyteblitz.MainActivity
 import hu.bme.aut.fvf13l.retrobyteblitz.databinding.ActivityLoginBinding
 import hu.bme.aut.fvf13l.retrobyteblitz.utility.SessionManager
 import hu.bme.aut.fvf13l.retrobyteblitz.viewmodel.AuthViewModel
 import hu.bme.aut.fvf13l.retrobyteblitz.viewmodel.AuthViewModelFactory
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
 
@@ -34,17 +36,24 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.loginButton.setOnClickListener {
-            val username = binding.usernameEditText.text.toString()
+            val email = binding.usernameEditText.text.toString()
             val password = binding.passwordEditText.text.toString()
 
-            if (username.isNotBlank() && password.isNotBlank()) {
-                authViewModel.login(username, password) { success, userId ->
+            if (email.isNotBlank() && password.isNotBlank()) {
+                authViewModel.login(email, password) { success, userId ->
                     if (success && userId != null) {
-                        SessionManager.saveUserSession(this, username, userId)
-                        startActivity(Intent(this, MainActivity::class.java))
-                        finish()
+                        lifecycleScope.launch {
+                            val username = userDao.getUserById(userId)?.username
+                            if (username != null) {
+                                SessionManager.saveUserSession(this@LoginActivity, username, userId)
+                                startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                                finish()
+                            } else {
+                                Toast.makeText(this@LoginActivity, "Failed to fetch username", Toast.LENGTH_SHORT).show()
+                            }
+                        }
                     } else {
-                        Toast.makeText(this, "Invalid credentials", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this,"Invalid credentials", Toast.LENGTH_SHORT).show()
                     }
                 }
             } else {
