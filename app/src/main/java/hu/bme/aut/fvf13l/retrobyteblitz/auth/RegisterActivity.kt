@@ -27,9 +27,10 @@ class RegisterActivity : AppCompatActivity() {
         binding.registerButton.setOnClickListener {
             val username = binding.usernameEditText.text.toString()
             val password = binding.passwordEditText.text.toString()
+            val email = binding.emailEditText.text.toString()
 
             when {
-                username.isBlank() || password.isBlank() -> {
+                username.isBlank() || password.isBlank() || email.isBlank() -> {
                     Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
                 }
                 username.contains(" ") -> {
@@ -39,7 +40,7 @@ class RegisterActivity : AppCompatActivity() {
                     Toast.makeText(this, "Password cannot contain spaces", Toast.LENGTH_SHORT).show()
                 }
                 else -> {
-                    authViewModel.register(username, password) { success ->
+                    authViewModel.register(email, username, password) { success ->
                         if (success) {
                             startActivity(Intent(this, LoginActivity::class.java))
                             finish()
