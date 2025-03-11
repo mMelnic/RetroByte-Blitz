@@ -7,16 +7,16 @@ import kotlinx.coroutines.launch
 
 class AuthViewModel(private val repository: UserRepository) : ViewModel() {
 
-    fun register(username: String, password: String, onResult: (Boolean) -> Unit) {
+    fun register(email: String, username: String, password: String, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
-            val success = repository.registerUser(username, password)
+            val success = repository.registerUser(email, password, username)
             onResult(success)
         }
     }
 
-    fun login(username: String, password: String, onResult: (Boolean, String?) -> Unit) {
+    fun login(email: String, password: String, onResult: (Boolean, String?) -> Unit) {
         viewModelScope.launch {
-            val (success, userId) = repository.loginUser(username, password)
+            val (success, userId) = repository.loginUser(email, password)
             onResult(success, userId)
         }
     }
