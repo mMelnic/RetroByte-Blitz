@@ -7,5 +7,4 @@ import androidx.room.PrimaryKey
 data class User(
     @PrimaryKey val username: String,
     val userId: String,
-    val hashedPassword: String
 )

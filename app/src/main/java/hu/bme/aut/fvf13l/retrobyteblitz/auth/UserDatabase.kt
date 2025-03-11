@@ -9,7 +9,7 @@ import hu.bme.aut.fvf13l.retrobyteblitz.model.DailyExerciseProgressDao
 import hu.bme.aut.fvf13l.retrobyteblitz.model.DailyExerciseScore
 import hu.bme.aut.fvf13l.retrobyteblitz.model.DailyExerciseScoreDao
 
-@Database(entities = [User::class, DailyExerciseProgress::class, DailyExerciseScore::class], version = 6)
+@Database(entities = [User::class, DailyExerciseProgress::class, DailyExerciseScore::class], version = 7)
 abstract class UserDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun dailyExerciseProgressDao(): DailyExerciseProgressDao
