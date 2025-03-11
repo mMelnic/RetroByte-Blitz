@@ -14,4 +14,7 @@ interface UserDao {
 
     @Query("UPDATE users SET username = :newUsername WHERE username = :oldUsername")
     suspend fun updateUsername(oldUsername: String, newUsername: String)
+
+    @Query("SELECT * FROM users WHERE userId = :userId LIMIT 1")
+    suspend fun getUserById(userId: String): User?
 }
