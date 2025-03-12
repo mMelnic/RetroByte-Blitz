@@ -45,7 +45,7 @@ class RegisterActivity : AppCompatActivity() {
                             startActivity(Intent(this, LoginActivity::class.java))
                             finish()
                         } else {
-                            Toast.makeText(this, "Username already exists", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "Problem registering user", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
