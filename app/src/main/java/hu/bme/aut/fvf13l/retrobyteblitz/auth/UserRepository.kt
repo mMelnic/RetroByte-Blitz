@@ -47,7 +47,12 @@ class UserRepository(private val userDao: UserDao) {
                 if (user != null) {
                     Pair(true, user.userId)
                 } else {
-                    Pair(false, null)
+                    val defaultUsername = "User${userId.take(3)}"
+                    val newUser = User(userId = userId, username = defaultUsername)
+                    withContext(Dispatchers.IO) {
+                        userDao.insertUser(newUser)
+                    }
+                    Pair(true, newUser.userId)
                 }
             } else {
                 Pair(false, null)
