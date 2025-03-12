@@ -1,59 +1,60 @@
 package hu.bme.aut.fvf13l.retrobyteblitz.auth
 
-import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class UserRepository(private val userDao: UserDao) {
 
-    fun registerUser(email: String, password: String, username: String) : Boolean{
-        var isSuccess = false
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val firebaseUser = task.result?.user
-                    if (firebaseUser != null) {
-                        val userId = firebaseUser.uid
-                        val user = User(userId = userId, username = username)
+    suspend fun registerUser(email: String, password: String, username: String): Boolean {
+        return try {
+            val authResult = FirebaseAuth.getInstance()
+                .createUserWithEmailAndPassword(email, password)
+                .await()
 
-                        CoroutineScope(Dispatchers.IO).launch {
-                            userDao.insertUser(user)
-                        }
-                        isSuccess = true
-                    }
-                } else {
-                    Log.e("Firebase", "Registration failed: ${task.exception?.message}")
-                    isSuccess = false
+            val firebaseUser = authResult.user
+            if (firebaseUser != null) {
+                val userId = firebaseUser.uid
+
+                withContext(Dispatchers.IO) {
+                    val user = User(userId = userId, username = username)
+                    userDao.insertUser(user)
                 }
+
+                true
+            } else {
+                false
             }
-        return isSuccess
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
     }
 
-    fun loginUser(email: String, password: String): Pair<Boolean, String?> {
-        var result: Pair<Boolean, String?> = Pair(false, null)
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val firebaseUser = task.result?.user
-                    if (firebaseUser != null) {
-                        val userId = firebaseUser.uid
+    suspend fun loginUser(email: String, password: String): Pair<Boolean, String?> {
+        return try {
+            val authResult = FirebaseAuth.getInstance()
+                .signInWithEmailAndPassword(email, password)
+                .await()
 
-                        CoroutineScope(Dispatchers.IO).launch {
-                            val user = userDao.getUserById(userId)
-                            result = if (user != null) {
-                                Pair(true, user.userId)
-                            } else {
-                                Pair(false, null)
-                            }
-                        }
-                    }
+            val firebaseUser = authResult.user
+            if (firebaseUser != null) {
+                val userId = firebaseUser.uid
+
+                val user = withContext(Dispatchers.IO) { userDao.getUserById(userId) }
+
+                if (user != null) {
+                    Pair(true, user.userId)
                 } else {
-                    result = Pair(false, null)
+                    Pair(false, null)
                 }
+            } else {
+                Pair(false, null)
             }
-        return result
+        } catch (e: Exception) {
+            Pair(false, null)
+        }
     }
 
     suspend fun updateUsername(oldUsername: String, newUsername: String): Boolean {
