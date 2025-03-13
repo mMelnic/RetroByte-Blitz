@@ -23,6 +23,7 @@ import hu.bme.aut.fvf13l.retrobyteblitz.MainActivity
 import hu.bme.aut.fvf13l.retrobyteblitz.data.api.RetrofitClient
 import hu.bme.aut.fvf13l.retrobyteblitz.databinding.FragmentSudokuGameBinding
 import hu.bme.aut.fvf13l.retrobyteblitz.utility.GameDifficultyUtils
+import hu.bme.aut.fvf13l.retrobyteblitz.utility.NetworkUtils
 import hu.bme.aut.fvf13l.retrobyteblitz.utility.ScoreUtility
 import kotlinx.coroutines.launch
 
@@ -53,6 +54,18 @@ class SudokuGameFragment : Fragment(), CountdownTimerFragment.TimerEndListener {
     }
 
     private fun fetchNewSudokuGrid() {
+        if (!NetworkUtils.isConnected(requireContext())) {
+            Toast.makeText(context, "No internet connection available. Please try again later.", Toast.LENGTH_SHORT).show()
+
+            val resultIntent = Intent().apply {
+                putExtra("ERROR", "No internet connection")
+            }
+            activity?.setResult(Activity.RESULT_CANCELED, resultIntent)
+            activity?.finish()
+
+            return
+        }
+
         val query = "{ newboard(limit: 1) { grids { value solution difficulty } } }"
         lifecycleScope.launch {
             try {
