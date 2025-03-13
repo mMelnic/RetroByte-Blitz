@@ -13,6 +13,7 @@ import com.google.firebase.ktx.Firebase
 import hu.bme.aut.fvf13l.retrobyteblitz.R
 import hu.bme.aut.fvf13l.retrobyteblitz.auth.UserDatabase
 import hu.bme.aut.fvf13l.retrobyteblitz.databinding.ActivityDailyExercisesBinding
+import hu.bme.aut.fvf13l.retrobyteblitz.utility.NetworkUtils
 import hu.bme.aut.fvf13l.retrobyteblitz.utility.SessionManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -59,37 +60,42 @@ class DailyExercisesActivity : AppCompatActivity() {
     private fun setupNewDay() {
         val dateKey = currentDate
 
-        database.child("daily_games").child(dateKey).get().addOnSuccessListener { snapshot ->
-            if (snapshot.exists()) {
-                val storedGames = snapshot.child("games").value as? String
-                if (storedGames != null) {
-                    selectedGames = storedGames.split(",")
+        if (NetworkUtils.isConnected(this)) {
+            database.child("daily_games").child(dateKey).get().addOnSuccessListener { snapshot ->
+                if (snapshot.exists()) {
+                    val storedGames = snapshot.child("games").value as? String
+                    if (storedGames != null) {
+                        selectedGames = storedGames.split(",")
+                        binding.gamesTextView.text = selectedGames.joinToString("\n")
+                    }
+                } else {
+                    selectedGames = categoryGames.keys.map { category ->
+                        val gamesInCategory = categoryGames[category] ?: emptyList()
+                        gamesInCategory.random()
+                    }
+
+                    database.child("daily_games").child(dateKey).setValue(
+                        mapOf("games" to selectedGames.joinToString(","))
+                    )
+
                     binding.gamesTextView.text = selectedGames.joinToString("\n")
                 }
-            } else {
-                selectedGames = categoryGames.keys.map { category ->
-                    val gamesInCategory = categoryGames[category] ?: emptyList()
-                    gamesInCategory.random()
+
+                binding.startButton.isEnabled = true
+                binding.startButton.text = getString(R.string.start_button_text)
+                binding.startButton.setOnClickListener {
+                    currentGameIndex = 0
+                    startGamesSequentially()
+                    saveProgress()
                 }
-
-                database.child("daily_games").child(dateKey).setValue(
-                    mapOf("games" to selectedGames.joinToString(","))
-                )
-
-                binding.gamesTextView.text = selectedGames.joinToString("\n")
+            }.addOnFailureListener {
+                Toast.makeText(this, R.string.error_fetching_games, Toast.LENGTH_SHORT).show()
             }
-
-            binding.startButton.isEnabled = true
-            binding.startButton.text = getString(R.string.start_button_text)
-            binding.startButton.setOnClickListener {
-                currentGameIndex = 0
-                startGamesSequentially()
-                saveProgress()
-            }
-        }.addOnFailureListener {
-            Toast.makeText(this, R.string.error_fetching_games, Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "No internet connection available.", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     private fun restoreOngoingSession(progress: DailyExerciseProgress) {
         currentGameIndex = progress.currentGameIndex
@@ -159,7 +165,8 @@ class DailyExercisesActivity : AppCompatActivity() {
     }
 
     private fun launchGame(gameName: String) {
-        val timeLimit = if (gameName == "Sudoku") 600000L else 60000L // 10 minutes for Sudoku, 1 minute for others
+        val timeLimit =
+            if (gameName == "Sudoku") 600000L else 60000L // 10 minutes for Sudoku, 1 minute for others
 
         val intent = Intent(this, GameActivity::class.java).apply {
             putExtra("GAME_NAME", gameName)
@@ -205,26 +212,35 @@ class DailyExercisesActivity : AppCompatActivity() {
         val username = SessionManager.getUsername(this)
 
         if (userId == null || username == null) {
-            Toast.makeText(this, "User session invalid. Please log in again.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "User session invalid. Please log in again.", Toast.LENGTH_SHORT)
+                .show()
             return
         }
-        val dailyPath = "leaderboard/$currentDate/$userId"
+        if (NetworkUtils.isConnected(this)) {
+            val dailyPath = "leaderboard/$currentDate/$userId"
 
-        database.child(dailyPath).get().addOnSuccessListener { snapshot ->
-            val existingData = snapshot.value as? Map<*, *>
-            val existingScore = (existingData?.get("score") as? Long) ?: 0
-            val updatedScore = existingScore + score
+            database.child(dailyPath).get().addOnSuccessListener { snapshot ->
+                val existingData = snapshot.value as? Map<*, *>
+                val existingScore = (existingData?.get("score") as? Long) ?: 0
+                val updatedScore = existingScore + score
 
-            val updatedData = mapOf(
-                "username" to username,
-                "score" to updatedScore
-            )
+                val updatedData = mapOf(
+                    "username" to username,
+                    "score" to updatedScore
+                )
 
-            database.child(dailyPath).setValue(updatedData).addOnSuccessListener {
-                // Success
+                database.child(dailyPath).setValue(updatedData).addOnSuccessListener {
+                    // Success
+                }
+            }.addOnFailureListener {
+                Toast.makeText(
+                    this,
+                    "Failed to update leaderboard. Please try again.",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-        }.addOnFailureListener {
-            Toast.makeText(this, "Failed to update leaderboard. Please try again.", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "No internet connection available. Leaderboard update failed.", Toast.LENGTH_SHORT).show()
         }
     }
 
