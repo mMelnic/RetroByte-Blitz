@@ -241,6 +241,7 @@ class DailyExercisesActivity : AppCompatActivity() {
             }
         } else {
             Toast.makeText(this, "No internet connection available. Leaderboard update failed.", Toast.LENGTH_SHORT).show()
+            // TODO: Use a background broadcast receiver to listen to connectivity changes and retry update
         }
     }
 
