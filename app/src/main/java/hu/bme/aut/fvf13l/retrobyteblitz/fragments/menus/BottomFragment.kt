@@ -18,6 +18,7 @@ import hu.bme.aut.fvf13l.retrobyteblitz.adapter.LeaderboardEntry
 import hu.bme.aut.fvf13l.retrobyteblitz.databinding.DialogLeaderboardBinding
 import hu.bme.aut.fvf13l.retrobyteblitz.databinding.FragmentBottomBinding
 import hu.bme.aut.fvf13l.retrobyteblitz.model.StatisticsActivity
+import hu.bme.aut.fvf13l.retrobyteblitz.utility.NetworkUtils
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -59,18 +60,24 @@ class BottomFragment : Fragment() {
         val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
         dialogBinding.dateTextView.text = getString(R.string.leaderboard_date, currentDate)
 
-        val database = Firebase.database.reference
-        database.child("leaderboard/$currentDate").get().addOnSuccessListener { snapshot ->
-            val leaderboard = snapshot.children.mapNotNull { entry ->
-                val score = entry.child("score").getValue(Long::class.java) ?: return@mapNotNull null
-                val username = entry.child("username").getValue(String::class.java) ?: "Unknown"
+        if(NetworkUtils.isConnected(requireContext())) {
+            val database = Firebase.database.reference
+            database.child("leaderboard/$currentDate").get().addOnSuccessListener { snapshot ->
+                val leaderboard = snapshot.children.mapNotNull { entry ->
+                    val score =
+                        entry.child("score").getValue(Long::class.java) ?: return@mapNotNull null
+                    val username = entry.child("username").getValue(String::class.java) ?: "Unknown"
 
-                LeaderboardEntry(username, score)
-            }.sortedByDescending { it.score }
+                    LeaderboardEntry(username, score)
+                }.sortedByDescending { it.score }
 
-            adapter.submitList(leaderboard)
-        }.addOnFailureListener {
-            Toast.makeText(requireContext(), "Failed to load leaderboard", Toast.LENGTH_SHORT).show()
+                adapter.submitList(leaderboard)
+            }.addOnFailureListener {
+                Toast.makeText(requireContext(), "Failed to load leaderboard", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        } else {
+            Toast.makeText(requireContext(), "No internet connection. Could not fetch data.", Toast.LENGTH_SHORT).show()
         }
 
         val dialog = AlertDialog.Builder(requireContext())
